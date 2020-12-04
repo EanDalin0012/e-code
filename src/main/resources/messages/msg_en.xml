@@ -44,11 +44,11 @@
     <entry key="account_account_lock">Account Lock Invalid.</entry>
     <entry key="account_credential_expired">Credential Expired Invalid.</entry>
     <entry key="account_account_expired">Account Expired Invalid.</entry>
-	<!--  -->
+	<!-- company -->
 	<entry key="company_id">Company ID is null | empty.</entry>
 	<entry key="company_name">Company Name is null | empty.</entry>
 	<entry key="company_contact">Company Contact is null | empty.</entry>
 	<entry key="company_email">Company Email is null | empty.</entry>
 	
-	
+	<!-- user account -->
 </properties>
