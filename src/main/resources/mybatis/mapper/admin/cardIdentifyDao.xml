@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ecode.admin.dao.CardIdentifyDao">
+
+    <select id="retrieveList" resultType="MMap">
+        <![CDATA[
+		   SELECT
+			  ci.id
+			, ci.card_id
+			, ci.card_img_front
+			, ci.card_img_rear
+			, ci.create_date
+			, ci.modify_date
+			, ci.status
+			, (SELECT u.user_name FROM user_ u WHERE u.id = ci.create_by) as "create_by"
+		    , (SELECT u.user_name FROM user_ u WHERE u.id = ci.modify_by) as "modify_by"
+		FROM card_identify ci
+		where ci.status != #{status}
+	     ]]>
+    </select>
+
+    <select id="retrieveCardIdentifyById" resultType="MMap">
+        <![CDATA[
+		   SELECT
+			  ci.id
+			, ci.card_id
+			, ci.card_img_front     as "font_image_id"
+			, ci.card_img_rear      as "rear_image_id"
+			, ci.create_date
+			, ci.modify_date
+			, ci.status
+			, (SELECT u.user_name FROM user_ u WHERE u.id = ci.create_by) as "create_by"
+		    , (SELECT u.user_name FROM user_ u WHERE u.id = ci.modify_by) as "modify_by"
+		FROM card_identify ci
+		where ci.id = #{card_id}
+	     ]]>
+    </select>
+
+    <insert id="save">
+        <![CDATA[
+	    	INSERT INTO card_identify
+			(
+			    id
+			    , card_id
+			    , card_img_front
+			    , card_img_rear
+			    , create_by
+			    , create_date
+			    , status
+			)
+			VALUES (
+			#{id}
+			, #{card_id}
+			, #{font_image_id}
+			, #{rear_image_id}
+			, #{user_id}
+			, to_char(NOW(), 'YYYYMMDD')
+			, #{status}
+			)
+    	]]>
+    </insert>
+
+    <select id="count">
+        <![CDATA[
+		  SELECT
+	     	COUNT (*)
+	     FROM card_identify
+	     ]]>
+    </select>
+
+    <update id="update">
+        <![CDATA[
+		UPDATE card_identify
+		SET
+             card_id            = #{card_id}
+            , card_img_front    = #{font_image_id}
+            , card_img_rear     = #{rear_image_id}
+            , modify_by         = #{user_id}
+            , modify_date       = to_char(NOW(), 'YYYYMMDD')
+            , status            = #{status}
+		WHERE id 			    = #{id}
+		]]>
+    </update>
+
+    <update id="delete">
+        <![CDATA[
+		update card_identify
+        set
+             status  		= #{status}
+            , modify_by   	= #{user_id}
+            , modify_date	= to_char(NOW(), 'YYYYMMDD')
+        where id   			= #{id}
+		]]>
+    </update>
+
+
+</mapper>
