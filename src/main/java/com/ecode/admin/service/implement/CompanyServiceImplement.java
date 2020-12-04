@@ -28,6 +28,7 @@ public class CompanyServiceImplement implements CompanyService{
 
 	    @Override
 	    public int delete(MMap param) throws ValidatorException{
+	    	ValidatorUtil.validate(param, "id");
 	        return companyDao.delete(param);
 	    }
 
