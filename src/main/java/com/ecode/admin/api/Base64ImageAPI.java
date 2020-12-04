@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api/base64/image/v1")
-public class Base64ImageController {
+public class Base64ImageAPI {
 
-	private static final Logger log = LoggerFactory.getLogger(Base64ImageController.class);
+	private static final Logger log = LoggerFactory.getLogger(Base64ImageAPI.class);
 	
     @Autowired
     private ResourceImageServiceImplement resourceImageService;
