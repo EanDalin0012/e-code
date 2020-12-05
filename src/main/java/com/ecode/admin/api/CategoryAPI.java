@@ -41,15 +41,15 @@ public class CategoryAPI {
     public ResponseData<MultiMap> list(@RequestParam("userId") int user_id, @RequestParam("lang") String lang) {
         ResponseData<MultiMap> response = new ResponseData<>();
         try {
-            log.info("=====******Start get list of category******=====");
+            log.info("=====Start get list of category=====");
             MMap input = new MMap();
             input.setString("status", Status.Delete.getValueStr());
 
             MultiMap out    = categoryService.retrieveList(input);
             response.setBody(out);
 
-            log.info("=====******result : "+response+"******=====");
-            log.info("=====******End get list of category******=====");
+            log.info("===== Result : "+response);
+            log.info("===== End get list of category=====");
             return response;
         } catch (ValidatorException ev) {
             log.error("========= error ValueException api category get list", ev);
@@ -71,12 +71,10 @@ public class CategoryAPI {
     public ResponseData<MMap> save (@RequestParam("userId") int user_id, @RequestParam("lang") String lang, @RequestBody MMap param) {
         ResponseData<MMap> responseData = new ResponseData<>();
         try {
-            log.info("=====*******Start save category********===="+lang);
+            log.info("===== Start save category =====");
             MMap body  = param.getMMap("body");
 
             MMap responseBody = new MMap();
-            responseBody.setString("status", "N");
-
             int sequence = categoryService.sequence();
 
             MMap input = new MMap();
@@ -86,8 +84,8 @@ public class CategoryAPI {
             input.setString("description", body.getString("description"));
             input.setString("status", Status.Active.getValueStr());
 
-            log.info("=====*******start value param: "+param);
-            log.info("=====*******start value: "+input);
+            log.info("===== Start value param: "+param);
+            log.info("===== Start value: "+input);
 
             int save = categoryService.save(input);
             if (save > 0) {
@@ -95,8 +93,8 @@ public class CategoryAPI {
             }
             responseData.setBody(responseBody);
 
-            log.info("========*******responseData "+responseData+"********======");
-            log.info("========*******End save category********====");
+            log.info("======== ResponseData:"+responseData);
+            log.info("======== End save category ====");
             
         } catch (ValidatorException ev) {
             log.error("========== error ValidatorException api category get list", ev);
@@ -116,11 +114,10 @@ public class CategoryAPI {
     public ResponseData<MMap> update(@RequestParam("userId") int user_id, @RequestParam("lang") String lang, @RequestBody MMap param) throws Exception {
         ResponseData<MMap> responseData = new ResponseData<>();
         try {
-          log.info("======****************Start Update category update data ****************======");
+          log.info("========= Start Update category update data ======");
 
           MMap out = new MMap();
-          out.setString(StatusYN.STATUS, StatusYN.N);
-
+          
           MMap body = param.getMMap("body");
           MMap input = new MMap();
           input.setInt("user_id", user_id);
@@ -129,18 +126,18 @@ public class CategoryAPI {
           input.setString("description", body.getString("description"));
           input.setString("status", Status.Modify.getValueStr());
 
-          log.info("======**************** Update category update data param: "+param+" ****************======");
-          log.info("======**************** Update category update data  input: "+input+"****************======");
+          log.info("====== Update category update data param: "+param);
+          log.info("====== Update category update data  input: "+input);
 
-          long update = categoryService.update(input);
+          int update = categoryService.update(input);
           if (update > 0) {
-              out.setString(StatusYN.STATUS, StatusYN.N);
+              out.setString(StatusYN.STATUS, StatusYN.Y);
           }
 
           responseData.setBody(out);
 
           log.info("====== Out put data: "+responseData);
-          log.info("======End Update category update data ======");
+          log.info("====== End Update category update data ======");
 
         } catch (ValidatorException ev){
             ev.printStackTrace();
