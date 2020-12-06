@@ -10,11 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.ecode.admin.constant.StatusYN;
 import com.ecode.admin.service.implement.CategoryServiceImplement;
 import com.ecode.admin.util.MessageUtil;
-import com.ecode.core.component.Translator;
 import com.ecode.core.constant.ErrorCode;
 import com.ecode.core.constant.Status;
 import com.ecode.core.dto.ErrorMessage;
@@ -22,7 +20,6 @@ import com.ecode.core.exception.ValidatorException;
 import com.ecode.core.map.MMap;
 import com.ecode.core.map.MultiMap;
 import com.ecode.core.template.ResponseData;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

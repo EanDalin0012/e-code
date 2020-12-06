@@ -18,6 +18,7 @@ import com.ecode.core.exception.ValidatorException;
 import com.ecode.core.map.MMap;
 import com.ecode.core.map.MultiMap;
 import com.ecode.core.template.ResponseData;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,7 +120,9 @@ public class UserAccountAPI {
 	        try {
 	            MMap body = param.getMMap("body");
 	            MMap input = new MMap();
+	            ObjectMapper mapper = new ObjectMapper();
 	            input.setInt("id", body.getInt("account_id"));
+	            log.info("======= input data:", mapper.writeValueAsString(input));
 	            MMap data = userAccountService.retrieveUserAccountByID(input);
 	            log.info("Retrieve User Account By Id Data:", data);
 	            responseData.setBody(data);
