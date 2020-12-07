@@ -11,6 +11,8 @@ import com.ecode.core.dto.ErrorMessage;
 import com.ecode.core.exception.ValidatorException;
 import com.ecode.core.map.MMap;
 import com.ecode.core.template.ResponseData;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +32,19 @@ public class CardIdentifyAPI {
         MMap out = new MMap();
 
         try {
+        	log.info("======== Start retrieve card identify by id=======");
+        	
             MMap body = param.getMMap("body");
             MMap input = new MMap();
             input.setString("card_id", body.getString("card_id"));
             MMap data = cardIdentifyService.retrieveCardIdentifyById(input);
-            log.info("Retrieve Card Identify By Id Data:", data);
             responseData.setBody(data);
             out.setString("status", StatusYN.Y);
+            
+            ObjectMapper mapper = new ObjectMapper();
+            log.info("======== Data:", mapper.writeValueAsString(responseData));
+            log.info("======== End retrieve card identify by id=======");
+            
             return responseData;
         } catch (ValidatorException ex) {
             log.error("get error api /api/card-identify", ex);

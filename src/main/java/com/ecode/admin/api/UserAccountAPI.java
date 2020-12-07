@@ -35,7 +35,9 @@ public class UserAccountAPI {
 	    public ResponseData<MMap> updateUserAccount(@RequestParam("lang") String lang,@RequestParam("userId") int user_id, @RequestBody MMap param) {
 	        ResponseData<MMap> response = new ResponseData<>();
 	        try {
-	            log.info("====== Start update user account api param:"+param);
+	            log.info("====== Start update user account =======");
+	            
+	            ObjectMapper objectMapper = new ObjectMapper();
 	            MMap body = param.getMMap("body");
 	            MMap resp = new MMap();
 	            MMap input = new MMap();
@@ -49,16 +51,20 @@ public class UserAccountAPI {
 	            input.setString("userName", 			body.getString("userName"));
 	            input.setInt("id", 						body.getInt("id"));
 
-	            log.info("====== update user account api input:"+input);
+	            log.info("====== Values:"+objectMapper.writeValueAsString(input));
+	            
 	            String isSuccess = StatusYN.N;
 
 	            int update = userAccountService.updateUserAccount(input);
 	            if (update > 0) {
 	                isSuccess = StatusYN.Y;
 	                resp.setString(StatusYN.STATUS , isSuccess);
-	                log.info("====update user account api success =======");
 	            }
 	            response.setBody(resp);
+	            
+	            log.info("====== Response Values :"+objectMapper.writeValueAsString(response));
+	            log.info("====== End update user account =======");
+	            
 	            return response;
 	        } catch (ValidatorException ex) {
 	        	log.error("========= error :", ex);
@@ -87,20 +93,19 @@ public class UserAccountAPI {
 	        ResponseData<MMap> responseData = new ResponseData<>();
 	        try {
 	            log.info("====Start get list user account api ====");
+	            
 	            MMap input = new MMap();
 	            MMap body = new MMap();
-
+	            ObjectMapper objectMapper = new ObjectMapper();
 	            input.setString("status", Status.Delete.getValueStr());
-	            log.info("==== get list user account api input: "+ input);
 	            MultiMap userList = userAccountService.getList(input);
-
 	            int count = userAccountService.count();
 	            body.setMultiMap("items", userList);
 	            body.setInt("totalRecords", count);
 
 	            responseData.setBody(body);
 
-	            log.info("====End get list user account api return value:"+responseData);
+	            log.info("==== Response Values:"+objectMapper.writeValueAsString(responseData));
 	            log.info("====End get list user account api====");
 
 	            return responseData;
@@ -118,15 +123,23 @@ public class UserAccountAPI {
 	        MMap out = new MMap();
 
 	        try {
+	        	log.info("========= Start retrive account by id ==========");
+	        	
+	        	ObjectMapper objectMapper = new ObjectMapper();
 	            MMap body = param.getMMap("body");
 	            MMap input = new MMap();
 	            ObjectMapper mapper = new ObjectMapper();
 	            input.setInt("id", body.getInt("account_id"));
-	            log.info("======= input data:", mapper.writeValueAsString(input));
+	            
+	            log.info("======= Values:"+ mapper.writeValueAsString(input));
+	            
 	            MMap data = userAccountService.retrieveUserAccountByID(input);
-	            log.info("Retrieve User Account By Id Data:", data);
 	            responseData.setBody(data);
 	            out.setString(StatusYN.STATUS, StatusYN.Y);
+	            
+	            log.info("========== Response Values:"+objectMapper.writeValueAsString(responseData));
+	            log.info("========== End retrive account by id ==========");
+	            
 	            return responseData;
 	        } catch (ValidatorException ex) {
 	            log.error("get error api retrieveUserById", ex);

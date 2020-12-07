@@ -20,6 +20,8 @@ import com.ecode.core.exception.ValidatorException;
 import com.ecode.core.map.MMap;
 import com.ecode.core.map.MultiMap;
 import com.ecode.core.template.ResponseData;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,16 +39,19 @@ public class CategoryAPI {
     @GetMapping(value = "/list")
     public ResponseData<MultiMap> list(@RequestParam("userId") int user_id, @RequestParam("lang") String lang) {
         ResponseData<MultiMap> response = new ResponseData<>();
+        
         try {
-            log.info("=====Start get list of category=====");
+            log.info("===== Start retrive list of category=====");
+            
             MMap input = new MMap();
             input.setString("status", Status.Delete.getValueStr());
-
             MultiMap out    = categoryService.retrieveList(input);
             response.setBody(out);
-
-            log.info("===== Result : "+response);
+            
+            ObjectMapper mapper = new ObjectMapper();
+            log.info("===== Result : "+mapper.writeValueAsString(response));
             log.info("===== End get list of category=====");
+            
             return response;
         } catch (ValidatorException ev) {
             log.error("========= error ValueException api category get list", ev);
@@ -61,19 +66,19 @@ public class CategoryAPI {
             response.setError(message);
             return response;
         }
-
     }
 
     @PostMapping(value = "/save")
     public ResponseData<MMap> save (@RequestParam("userId") int user_id, @RequestParam("lang") String lang, @RequestBody MMap param) {
         ResponseData<MMap> responseData = new ResponseData<>();
+        
         try {
             log.info("===== Start save category =====");
+            
+            ObjectMapper mapper = new ObjectMapper();
             MMap body  = param.getMMap("body");
-
             MMap responseBody = new MMap();
             int sequence = categoryService.sequence();
-
             MMap input = new MMap();
             input.setInt("id", sequence);
             input.setInt("user_id", user_id);
@@ -81,16 +86,15 @@ public class CategoryAPI {
             input.setString("description", body.getString("description"));
             input.setString("status", Status.Active.getValueStr());
 
-            log.info("===== Start value param: "+param);
-            log.info("===== Start value: "+input);
-
+            log.info("===== value : "+mapper.writeValueAsString(input));
+            
             int save = categoryService.save(input);
             if (save > 0) {
                 responseBody.setString("status", "Y");
             }
             responseData.setBody(responseBody);
 
-            log.info("======== ResponseData:"+responseData);
+            log.info("======== Response Data:"+mapper.writeValueAsString(responseData));
             log.info("======== End save category ====");
             
         } catch (ValidatorException ev) {
@@ -102,6 +106,7 @@ public class CategoryAPI {
             e.printStackTrace();
             log.error("========= error Exception api save category", e);
             ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
+            responseData.setError(message);
             return responseData;
         }
         return responseData;
@@ -110,11 +115,12 @@ public class CategoryAPI {
     @PostMapping(value = "/update")
     public ResponseData<MMap> update(@RequestParam("userId") int user_id, @RequestParam("lang") String lang, @RequestBody MMap param) throws Exception {
         ResponseData<MMap> responseData = new ResponseData<>();
+        
         try {
           log.info("========= Start Update category update data ======");
-
-          MMap out = new MMap();
           
+          ObjectMapper objectMappter = new ObjectMapper();
+          MMap out = new MMap();
           MMap body = param.getMMap("body");
           MMap input = new MMap();
           input.setInt("user_id", user_id);
@@ -123,8 +129,7 @@ public class CategoryAPI {
           input.setString("description", body.getString("description"));
           input.setString("status", Status.Modify.getValueStr());
 
-          log.info("====== Update category update data param: "+param);
-          log.info("====== Update category update data  input: "+input);
+          log.info("====== Value : "+objectMappter.writeValueAsString(input));
 
           int update = categoryService.update(input);
           if (update > 0) {
@@ -133,7 +138,7 @@ public class CategoryAPI {
 
           responseData.setBody(out);
 
-          log.info("====== Out put data: "+responseData);
+          log.info("====== Response data: "+responseData);
           log.info("====== End Update category update data ======");
 
         } catch (ValidatorException ev){
@@ -158,12 +163,14 @@ public class CategoryAPI {
         TransactionStatus transactionStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
         try {
             log.info("============ Start delete api category delete =============");
-            log.info("============ Start delete api category param: "+param);
-
+            
+            ObjectMapper objectMapper = new ObjectMapper();
             MMap out = new MMap();
             out.setString(StatusYN.STATUS, StatusYN.N);
             MultiMap body = param.getMultiMap("body");
 
+            log.info("======= delete values: "+objectMapper.writeValueAsString(body));
+            
             if (body.size() > 0) {
                 MMap input = new MMap();
                 for (MMap data : body.toListData()) {
@@ -176,6 +183,9 @@ public class CategoryAPI {
                 transactionManager.commit(transactionStatus);
                 out.setString(StatusYN.STATUS, StatusYN.Y);
                 responseData.setBody(out);
+                log.info("============ Response Date: "+ objectMapper.writeValueAsString(responseData));
+                log.info("============ End delete api category delete =============");
+                
             }
 
         } catch (ValidatorException ev) {

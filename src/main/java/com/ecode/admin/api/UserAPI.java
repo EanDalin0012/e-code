@@ -23,6 +23,7 @@ import com.ecode.core.exception.ValidatorException;
 import com.ecode.core.map.MMap;
 import com.ecode.core.map.MultiMap;
 import com.ecode.core.template.ResponseData;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -38,8 +39,8 @@ public class UserAPI {
     @Autowired
     private PlatformTransactionManager transactionManager;
     
-//    @Autowired
-//    private TokenStore tokenStore;
+    @Autowired
+    private TokenStore tokenStore;
     
     /**
      * <pre>
@@ -53,18 +54,22 @@ public class UserAPI {
     public ResponseData<MMap> getUserList(@RequestParam("userId") int user_id, @RequestParam("lang") String lang)  {
         ResponseData<MMap> responseData = new ResponseData<>();
         try {
+        	log.info("======== Start retrieve list of user ============");
+        	
+        	ObjectMapper objectMapper = new ObjectMapper();
             MMap input = new MMap();
             MMap body = new MMap();
-
             input.setString("status", Status.Delete.getValueStr());
             MultiMap userList = userService.getList(input);
-
             int count = userService.count();
             body.setMultiMap("items", userList);
             body.setInt("totalRecords", count);
-
             responseData.setBody(body);
-
+            
+            log.info("======== Response Values:"+ objectMapper.writeValueAsString(responseData));
+            log.info("======== End retrieve list of user ============");
+            
+            return responseData;
         }catch (ValidatorException ex) {
             log.error("=========== get error:", ex);
             ErrorMessage message = MessageUtil.message("user_"+ex.getKey(), lang);
@@ -77,7 +82,7 @@ public class UserAPI {
         	responseData.setError(message);
             return responseData;
         }
-        return responseData;
+        
     }
 
     /**
@@ -113,17 +118,28 @@ public class UserAPI {
         ResponseData responseData = new ResponseData();
         MMap output = new MMap();
         try {
+        	log.info("========== Start revoke toke===========");
+        	
+        	ObjectMapper objectMapper = new ObjectMapper();
             output.setString(StatusYN.STATUS, StatusYN.N);
             String authHeader = request.getHeader("Authorization");
+            
+            log.info("=========== token values: "+authHeader);
+            
             if (authHeader != null) {
                 String tokenValue = authHeader.replace("Bearer", "").trim();
-//                OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenValue);
-//                tokenStore.removeAccessToken(accessToken);
+                OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenValue);
+                tokenStore.removeAccessToken(accessToken);
                 output.setString(StatusYN.STATUS, StatusYN.Y);
             }
             responseData.setBody(output);
+            
+            log.info("========= Response values:"+objectMapper.writeValueAsString(responseData));
+            log.info("========== End revoke toke===========");
+            
             return  responseData;
         }catch (Exception e) {
+        	log.error("======== get error revoke toke exception ", e);
         	ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, "en");
         	responseData.setError(message);
             return responseData;
@@ -146,6 +162,9 @@ public class UserAPI {
         TransactionStatus transactionStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         try {
+        	log.info("======== Start User "+function+"=============");
+        	
+        	ObjectMapper objectMapper = new ObjectMapper();
             MMap input = new MMap();
             MMap responseBody = new MMap();
             String Yn = StatusYN.N;
@@ -164,6 +183,9 @@ public class UserAPI {
 
             if (function == "save") {
                 input.setString(StatusYN.STATUS, Status.Active.getValueStr());
+                
+                log.info("========== values:"+objectMapper.writeValueAsString(input));
+                
                 int save = userService.save(input);
                 if (save > 0) {
                     Yn = StatusYN.Y;
@@ -172,6 +194,9 @@ public class UserAPI {
             if (function == "update") {
                 input.setLong("id", body.getLong("id"));
                 input.setString("status", Status.Modify.getValueStr());
+                
+                log.info("========== values:"+objectMapper.writeValueAsString(input));
+                
                 int update = userService.update(input);
                 if (update > 0) {
                     Yn = StatusYN.Y;
@@ -181,6 +206,10 @@ public class UserAPI {
             responseBody.setString(StatusYN.STATUS, Yn);
             response.setBody(responseBody);
             transactionManager.commit(transactionStatus);
+            
+            log.info("========== Response Values:"+objectMapper.writeValueAsString(response));
+            log.info("========== End User "+function+"=============");
+            
             return response;
         } catch (ValidatorException ex) {
         	 log.error("========== get error:", ex);
@@ -188,6 +217,7 @@ public class UserAPI {
              response.setError(message);
              return response;
         } catch (Exception e) {
+        	log.error("======== get error exception", e);
             transactionManager.rollback(transactionStatus);
             ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
             response.setError(message);
@@ -200,12 +230,16 @@ public class UserAPI {
         ResponseData<MMap> out = new ResponseData<>();
         try {
             log.info("======== Start load user info========");
+            
+            ObjectMapper objectMapper = new ObjectMapper();
             MMap input = new MMap();
             input.setString("user_name", userName);
             MMap outPut = userService.loadUserByUserName(input);
-            log.info("======== user api loader user data : " + outPut);
-            log.info("======== End load user info========");
             out.setBody(outPut);
+            
+            log.info("======== Values : " + objectMapper.writeValueAsString(out));
+            log.info("======== End load user info========");
+           
             return out;
         }catch (ValidatorException ex) {
         	 log.error("======== error:", ex);

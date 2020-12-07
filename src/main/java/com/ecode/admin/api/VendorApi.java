@@ -21,6 +21,7 @@ import com.ecode.core.exception.ValidatorException;
 import com.ecode.core.map.MMap;
 import com.ecode.core.map.MultiMap;
 import com.ecode.core.template.ResponseData;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,15 +43,16 @@ public class VendorApi {
         try {
           log.info("====== Start Vendor get list ====");
 
+          ObjectMapper objectMapper = new ObjectMapper();
           MMap input = new MMap();
           input.setString("status", Status.Delete.getValueStr());
-
           MultiMap responseBody = vendorService.retrieveList(input);
           responseData.setBody(responseBody);
 
-          log.info("====== Vendor list value:"+responseData);
+          log.info("====== Vendor list value:"+objectMapper.writeValueAsString(responseData));
           log.info("<===== End Vendor get list ====");
-
+          
+          return responseData;
         } catch (ValidatorException ex) {
             log.error("get error", ex);
             ErrorMessage message = MessageUtil.message("vendor_"+ex.getKey(), lang);
@@ -62,7 +64,7 @@ public class VendorApi {
             responseData.setError(message);
             return responseData;
         }
-        return responseData;
+        
     }
 
     @PostMapping(value = "/save")
@@ -83,10 +85,12 @@ public class VendorApi {
     private ResponseData<MMap> execute(String function, int user_id, String lang, MMap param) {
         ResponseData<MMap> responseData = new ResponseData<>();
         try {
+        	log.info("========= Start Vendor "+function+"==========");
+        	
+        	ObjectMapper objectMapper = new ObjectMapper();
             MMap input = new MMap();
             MMap out = new MMap();
             out.setString(StatusYN.STATUS, StatusYN.N);
-
             input.setInt("user_id",     user_id);
             input.setString("name",     param.getString("name"));
             input.setString("contact",  param.getString("contact"));
@@ -99,6 +103,9 @@ public class VendorApi {
             if (function == "save") {
                 int id = vendorService.sequence();
                 input.setInt("id",          id);
+                
+                log.info("========== Values:"+objectMapper.writeValueAsString(input));
+                
                 int save = vendorService.save(input);
                 if (save > 0 ) {
                     out.setString(StatusYN.STATUS, StatusYN.Y);
@@ -107,6 +114,9 @@ public class VendorApi {
             } else if (function == "update") {
                 input.setInt("id",          param.getInt("id"));
                 int update = vendorService.update(input);
+                
+                log.info("========== Values:"+objectMapper.writeValueAsString(input));
+                
                 if (update > 0) {
                     out.setString(StatusYN.STATUS, StatusYN.Y);
                 }
@@ -114,8 +124,10 @@ public class VendorApi {
 
             responseData.setBody(out);
 
-            log.info("===== Vendor response : "+responseData);
+            log.info("===== Vendor response : "+objectMapper.writeValueAsString(responseData));
             log.info("===== End Vendor save api ====");
+            
+            return responseData;
         } catch (ValidatorException ex) {
             log.error("====get error", ex);
             ErrorMessage message = MessageUtil.message("vendor_"+ex.getKey(), lang);
@@ -127,16 +139,17 @@ public class VendorApi {
             responseData.setError(message);
             return responseData;
         }
-        return responseData;
     }
 
     private ResponseData<MMap> delete(int user_id, String lang, MultiMap param) {
         ResponseData<MMap> responseData = new ResponseData<>();
         TransactionStatus transactionStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
         try {
-            log.info("=========Start========");
-            log.info("======= Data delete: "+param);
+            log.info("=========Start Delete Vendor========");
 
+            ObjectMapper objectMapper = new ObjectMapper();
+            log.info("========= Delete values:"+objectMapper.writeValueAsString(param));
+            
             MMap out = new MMap();
             out.setString(StatusYN.STATUS, StatusYN.N);
             if(param.size() > 0) {
@@ -152,7 +165,11 @@ public class VendorApi {
                 out.setString("status", "Y");
                 responseData.setBody(out);
             }
-            log.info("========== End ==========");
+            
+            log.info("======== Response Values:"+objectMapper.writeValueAsString(responseData));
+            log.info("=========Start Delete Vendor========");
+            
+            return responseData;
         }  catch (ValidatorException ex) {
             log.error("get error", ex);
             ErrorMessage message = MessageUtil.message("vendor_"+ex.getKey(), lang);
@@ -164,6 +181,6 @@ public class VendorApi {
             responseData.setError(message);
             return responseData;
         }
-        return responseData;
+        
     }
 }

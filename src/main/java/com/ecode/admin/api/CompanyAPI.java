@@ -21,6 +21,7 @@ import com.ecode.core.exception.ValidatorException;
 import com.ecode.core.map.MMap;
 import com.ecode.core.map.MultiMap;
 import com.ecode.core.template.ResponseData;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,12 +50,19 @@ public class CompanyAPI {
     public ResponseData<MMap> getList(@RequestParam("userId") int user_id, @RequestParam("lang") String lang) {
         ResponseData<MMap> response = new ResponseData<>();
         try {
+        	log.info("========== Start retrieve list ==========");
+        	
+        	ObjectMapper objectMappter = new ObjectMapper();
             MMap input = new MMap();
             input.setString("status", Status.Delete.getValueStr());
             MultiMap list = companyService.getList(input);
             MMap out = new MMap();
             out.setMultiMap("list", list);
             response.setBody(out);
+            
+            log.info("========== Response Value:"+ objectMappter.writeValueAsString(response));
+            log.info("========== End retrieve list ==========");
+            
             return response;
         } catch (Exception e) {
             log.error("======== get error api company:", e.getMessage());
@@ -104,13 +112,18 @@ public class CompanyAPI {
     @PostMapping(value = "/update/status/to/delete")
     public ResponseData<MMap> delete(@RequestBody MMap param, @RequestParam("userId") int user_id, @RequestParam("lang") String lang) {
         ResponseData<MMap> response = new ResponseData<>();
-        MMap header 	= param.getMMap("header");
-        MMap body 		= param.getMMap("body");
-        MultiMap list 	= body.getMultiMap("list");
-
         TransactionStatus transactionStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         try {
+        	log.info("========= Start Delete company =====");
+        	
+        	ObjectMapper objectMapper = new ObjectMapper();
+        	MMap header 	= param.getMMap("header");
+            MMap body 		= param.getMMap("body");
+            MultiMap list 	= body.getMultiMap("list");
+            
+            log.info("========= Delete Values:"+ objectMapper.writeValueAsString(list));
+            
             for (MMap in : list.toListData()) {
                 MMap input = new MMap();
                 input.setString("status", Status.Delete.getValueStr());
@@ -119,10 +132,14 @@ public class CompanyAPI {
                 System.out.println(input);
                 companyService.delete(input);
             }
+            
             MMap resBody = new MMap();
             resBody.setString(StatusYN.STATUS, StatusYN.Y);
             response.setBody(resBody);
             transactionManager.commit(transactionStatus);
+            
+            log.info("=========== Response Data:"+ objectMapper.writeValueAsString(response));
+            log.info("========= End Delete company =====");
             
             return response;
         } catch (ValidatorException ex) {

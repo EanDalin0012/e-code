@@ -67,6 +67,8 @@ public class ProductAPI {
     private ResponseData<MMap> execute(String function, int user_id, String lang, MMap param) {
         ResponseData<MMap> responseData = new ResponseData<>();
         try {
+        	log.info("====== Start Product "+function+ "===========");
+        	
             ObjectMapper objectMapper = new ObjectMapper();
             MMap input = new MMap();
             MMap out = new MMap();
@@ -83,7 +85,9 @@ public class ProductAPI {
             if (function == "save") {
                 int id = productService.sequence();
                 input.setInt("id", id);
-                log.info("product info:", input);
+                
+                log.info("========== product values:" + objectMapper.writeValueAsString(input));
+                
                 int save = productService.save(input);
                 if (save > 0) {
                 	out.setString(StatusYN.STATUS, StatusYN.Y);
@@ -91,7 +95,9 @@ public class ProductAPI {
 
             } else if (function == "update") {
                 input.setInt("id", param.getInt("id"));
-                log.info("product info:", objectMapper.writeValueAsString(input));
+                
+                log.info("========== product values:" + objectMapper.writeValueAsString(input));
+                
                 int update = productService.update(input);
                 if (update > 0) {
                     out.setString(StatusYN.STATUS, StatusYN.Y);
@@ -100,8 +106,9 @@ public class ProductAPI {
 
             responseData.setBody(out);
 
-            log.info("=====****Product response : " + responseData + "***====");
-            log.info("=====****End product " + function);
+            log.info("===== Product response : " + objectMapper.writeValueAsString(responseData) );
+            log.info("===== End product ====");
+            
             return responseData;
         } catch (ValidatorException ex) {
             log.error("===== get error save api product:", ex);
@@ -120,8 +127,12 @@ public class ProductAPI {
     private ResponseData<MMap> delete(int user_id, String lang, MultiMap param) {
         ResponseData<MMap> responseData = new ResponseData<>();
         TransactionStatus transactionStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        
         try {
-            log.info("====== Data delete: " + param);
+            log.info("====== Start Delete Product ========");
+            
+            ObjectMapper objectMapper = new ObjectMapper();
+            log.info("====== Values:"+objectMapper.writeValueAsString(param));
 
             MMap out = new MMap();
             out.setString(StatusYN.STATUS, StatusYN.N);
@@ -137,6 +148,10 @@ public class ProductAPI {
                 transactionManager.commit(transactionStatus);
                 out.setString(StatusYN.STATUS, StatusYN.Y);
                 responseData.setBody(out);
+                
+                log.info("====== Response Data: "+objectMapper.writeValueAsString(responseData));
+                log.info("====== Start Delete Product ========");
+                
             }
         } catch (ValidatorException ex) {
         	log.error("===== get error save api product:", ex);
@@ -156,14 +171,14 @@ public class ProductAPI {
         ResponseData<MultiMap> responseData = new ResponseData<>();
         try {
             log.info("====== Start Product get list ====");
-
+            
+            ObjectMapper objectMapper = new ObjectMapper();
             MMap input = new MMap();
             input.setString("status", Status.Delete.getValueStr());
-
             MultiMap responseBody = productService.retrieveList(input);
             responseData.setBody(responseBody);
 
-            log.info("===== Product list value:" + responseData );
+            log.info("===== Product list value:" + objectMapper.writeValueAsString(responseData) );
             log.info("=====End Product get list====");
 
         } catch (ValidatorException ex) {
@@ -184,6 +199,9 @@ public class ProductAPI {
     public ResponseData<MMap> swichOn(String note, MMap data, int user_id, String lang) {
         ResponseData<MMap> responseData = new ResponseData<>();
         try{
+        	log.info("======= Start Swich ON =======");
+        	
+        	ObjectMapper objectMapper = new ObjectMapper();
             MMap input = new MMap();
             MMap output = new MMap();
             output.setString("status", StatusYN.N);
@@ -191,9 +209,9 @@ public class ProductAPI {
             input.setInt("id", data.getInt("product_id"));
             input.setString("status", Status.Modify.getValueStr());
             input.setInt("user_id", user_id);
-            ObjectMapper objectMapper = new ObjectMapper();
+            
 
-            log.info("data", objectMapper.writeValueAsString(input));
+            log.info("========= Values :", objectMapper.writeValueAsString(input));
 
             if(note == "web") {
                 input.setBoolean("web_show", data.getBoolean("value"));
@@ -209,17 +227,20 @@ public class ProductAPI {
                 }
             }
             responseData.setBody(output);
+            
+            log.info("========== Response values:"+objectMapper.writeValueAsString(responseData));
+            log.info("========= End Swich ON =========");
+            
             return responseData;
-    } catch(ValidatorException ex){
-        log.error("get error updateShowOnWeb api product", ex);
-        ErrorMessage message = MessageUtil.message("product_"+ex.getKey(), lang);
-        responseData.setError(message);
-        return responseData;
-    } catch(Exception e) {
-    	 ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
-         responseData.setError(message);
-         return responseData;
-    }
-       
+	    } catch(ValidatorException ex){
+	        log.error("get error updateShowOnWeb api product", ex);
+	        ErrorMessage message = MessageUtil.message("product_"+ex.getKey(), lang);
+	        responseData.setError(message);
+	        return responseData;
+	    } catch(Exception e) {
+	    	 ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
+	         responseData.setError(message);
+	         return responseData;
+	    }  
     }
 }
