@@ -1,0 +1,46 @@
+# product e commerce
+"product"
+--
+"id" int
+"category_id" int
+"name" varchar
+"description" varchar
+"status" varchar
+"create-date" varchar
+"create_by" varchar
+"modify_date" varchar
+"modify_by" varchar
+
+"product_description"
+--
+"id" varchar
+"english_value" text
+"khmer_value" text
+"chiness_value" text
+"status" varchar
+"create-date" varchar
+"create_by" varchar
+"modify_date" varchar
+"modify_by" varchar
+
+"resource_img"
+--
+"id" varchar
+"file_source" varchar
+"file_name" varchar
+"file_size" int
+"file_extension" varchar
+"file_type" varchar
+"original_name" varchar
+"status" varchar
+"create-date" varchar
+"create_by" varchar
+"modify_date" varchar
+"modify_by" varchar
+
+"product_details_references"
+--
+"id" varchar
+"product_id" int FK >- product.id
+"product_description_id" varchar FK >0- product_description.id
+"resource_img_id" varchar FK >0- resource_img.id
