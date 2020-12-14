@@ -8,6 +8,7 @@ class ECodeApplicationTests {
 
 	@Test
 	void contextLoads() {
+		System.out.print("Testing");
 	}
 
 }

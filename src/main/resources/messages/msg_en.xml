@@ -51,4 +51,9 @@
 	<entry key="company_email">Company Email is null | empty.</entry>
 	
 	<!-- user account -->
+	
+	<!--product_detail_references_  -->
+	<entry key="product_detail_references_product_id">Product ID is null | empty.</entry>
+	<entry key="product_detail_references_resource_id">Product Image is null | empty.</entry>
+	<entry key="product_detail_references_product_detials_id">Product Details ID is null | empty.</entry>
 </properties>

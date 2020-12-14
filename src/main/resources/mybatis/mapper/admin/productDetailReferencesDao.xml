@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ecode.admin.dao.ProductDetailReferencesDao">
+
+        
+    <insert id="save">
+        <![CDATA[
+	    	INSERT INTO product_details_references
+			(
+			    id
+			    , product_id
+			    , resource_id
+			    , product_detials_id
+				, create_date
+				, create_by
+				, status
+			)
+			VALUES (
+			  #{id}
+			, #{product_id}
+			, #{resource_id}
+			, #{product_id}
+			, to_char(NOW(), 'YYYYMMDD')
+			, #{user_id}
+			, #{status}
+			)
+    	]]>
+    </insert>
+    
+    <update id="delete">
+        <![CDATA[
+		update product_detials
+        set
+             status  		= #{status}
+            , modify_by   	= #{user_id}
+            , modify_date	= to_char(NOW(), 'YYYYMMDD')
+        where id   			= #{id}
+		]]>
+    </update>
+
+</mapper>

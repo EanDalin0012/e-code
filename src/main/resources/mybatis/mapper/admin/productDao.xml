@@ -4,7 +4,7 @@
 
     <select id="retrieveList" resultType="MMap">
         <![CDATA[
-		    SELECT
+		   SELECT
 			  p.id
 			, p.name
 		 	, p.description
@@ -15,11 +15,13 @@
 			, p.category_id
 			, p.web_show
 			, p.mobile_show
-			, c."name"		as "catgory_name"
+			, pdf.id 			as "product_details_references_id"
+			, c."name"			as "catgory_name"
 			, (SELECT u.user_name FROM user_ u WHERE u.id = p.create_by) as "create_by"
-		    , (SELECT u.user_name FROM user_ u WHERE u.id = p.modify_by) as "modify_by"
+		  , (SELECT u.user_name FROM user_ u WHERE u.id = p.modify_by) as "modify_by"
 		FROM product p
 		INNER JOIN category c on c.id = p.category_id
+		LEFT JOIN product_details_references pdf on p.id = pdf.product_id
 		where p.status != #{status}
 	     ]]>
     </select>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ecode.admin.dao.ProductDescriptionDao">
+
+    <select id="retrieveList" resultType="MMap">
+        <![CDATA[
+		  SELECT 
+			pd.id
+			 , pd.context_kh
+			 , pd.context_en
+			 , pd.context_ch
+			 , pd.create_date
+			 , pd.modify_date
+			 , pd.status
+			 , (SELECT u.user_name FROM user_ u WHERE u.id = pd.create_by) as "create_by"
+			 , (SELECT u.user_name FROM user_ u WHERE u.id = pd.modify_by) as "modify_by"
+			FROM
+			product_detials pd
+			where pd.status != #{status}
+	     ]]>
+    </select>
+
+	<select id="retrieveByID" resultType="MMap">
+	     <![CDATA[
+			   SELECT 
+				pd.id
+			 , pd.context_kh
+			 , pd.context_en
+			 , pd.context_ch
+			 , pd.create_date
+			 , pd.modify_date
+			 , pd.status
+			 , (SELECT u.user_name FROM user_ u WHERE u.id = pd.create_by) as "create_by"
+			 , (SELECT u.user_name FROM user_ u WHERE u.id = pd.modify_by) as "modify_by"
+			FROM
+			product_detials pd
+			where pd.ids = #{id}
+		 ]]>
+	</select>
+	    
+    <insert id="save">
+        <![CDATA[
+	    	INSERT INTO product_detials
+			(
+			    id
+			    , context_kh
+			    , context_en
+			    , context_ch
+				, create_date
+				, create_by
+				, status
+			)
+			VALUES (
+			  #{id}
+			, COALESCE(#{context_kh}, '')
+			, COALESCE(#{context_en}, '')
+			, COALESCE(#{context_ch}, '')
+			, to_char(NOW(), 'YYYYMMDD')
+			, #{user_id}
+			, #{status}
+			)
+    	]]>
+    </insert>
+
+    <update id="update">
+        <![CDATA[
+            UPDATE product_detials
+            SET
+                  context_kh 		= COALESCE(#{context_kh}, '')
+                , context_en  		= COALESCE(#{context_en}, '')
+                , context_ch  		= COALESCE(#{context_ch}, '')
+                , modify_date 	    = to_char(NOW(), 'YYYYMMDD')
+                , modify_by		    = #{user_id}
+                , status		    = #{status}
+            WHERE id 			    = #{id}
+		]]>
+    </update>
+
+    <update id="delete">
+        <![CDATA[
+		update product_detials
+        set
+             status  		= #{status}
+            , modify_by   	= #{user_id}
+            , modify_date	= to_char(NOW(), 'YYYYMMDD')
+        where id   			= #{id}
+		]]>
+    </update>
+
+</mapper>
