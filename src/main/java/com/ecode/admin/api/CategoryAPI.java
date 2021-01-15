@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 @RequestMapping(value = "/api/category/v1")
 public class CategoryAPI {
 
-	private static final Logger log = LoggerFactory.getLogger(CategoryAPI.class);
+    private static final Logger log = LoggerFactory.getLogger(CategoryAPI.class);
 
     @Autowired
     private CategoryServiceImplement categoryService;
@@ -39,24 +39,24 @@ public class CategoryAPI {
     @GetMapping(value = "/list")
     public ResponseData<MultiMap> list(@RequestParam("userId") int user_id, @RequestParam("lang") String lang) {
         ResponseData<MultiMap> response = new ResponseData<>();
-        
+
         try {
             log.info("===== Start retrive list of category=====");
-            
+
             MMap input = new MMap();
             input.setString("status", Status.Delete.getValueStr());
-            MultiMap out    = categoryService.retrieveList(input);
+            MultiMap out = categoryService.retrieveList(input);
             response.setBody(out);
-            
+
             ObjectMapper mapper = new ObjectMapper();
-            log.info("===== Result : "+mapper.writeValueAsString(response));
+            log.info("===== Result : " + mapper.writeValueAsString(response));
             log.info("===== End get list of category=====");
-            
+
             return response;
         } catch (ValidatorException ev) {
             log.error("========= error ValueException api category get list", ev);
             ev.printStackTrace();
-            ErrorMessage message = MessageUtil.message("category_"+ev.getKey(), lang);
+            ErrorMessage message = MessageUtil.message("category_" + ev.getKey(), lang);
             response.setError(message);
             return response;
         } catch (Exception e) {
@@ -69,14 +69,14 @@ public class CategoryAPI {
     }
 
     @PostMapping(value = "/save")
-    public ResponseData<MMap> save (@RequestParam("userId") int user_id, @RequestParam("lang") String lang, @RequestBody MMap param) {
+    public ResponseData<MMap> save(@RequestParam("userId") int user_id, @RequestParam("lang") String lang, @RequestBody MMap param) {
         ResponseData<MMap> responseData = new ResponseData<>();
-        
+
         try {
             log.info("===== Start save category =====");
-            
+
             ObjectMapper mapper = new ObjectMapper();
-            MMap body  = param.getMMap("body");
+            MMap body = param.getMMap("body");
             MMap responseBody = new MMap();
             int sequence = categoryService.sequence();
             MMap input = new MMap();
@@ -86,20 +86,20 @@ public class CategoryAPI {
             input.setString("description", body.getString("description"));
             input.setString("status", Status.Active.getValueStr());
 
-            log.info("===== value : "+mapper.writeValueAsString(input));
-            
+            log.info("===== value : " + mapper.writeValueAsString(input));
+
             int save = categoryService.save(input);
             if (save > 0) {
                 responseBody.setString("status", "Y");
             }
             responseData.setBody(responseBody);
 
-            log.info("======== Response Data:"+mapper.writeValueAsString(responseData));
+            log.info("======== Response Data:" + mapper.writeValueAsString(responseData));
             log.info("======== End save category ====");
-            
+
         } catch (ValidatorException ev) {
             log.error("========== error ValidatorException api category get list", ev);
-            ErrorMessage message = MessageUtil.message("category_"+ev.getKey(), lang);
+            ErrorMessage message = MessageUtil.message("category_" + ev.getKey(), lang);
             responseData.setError(message);
             return responseData;
         } catch (Exception e) {
@@ -115,36 +115,36 @@ public class CategoryAPI {
     @PostMapping(value = "/update")
     public ResponseData<MMap> update(@RequestParam("userId") int user_id, @RequestParam("lang") String lang, @RequestBody MMap param) throws Exception {
         ResponseData<MMap> responseData = new ResponseData<>();
-        
+
         try {
-          log.info("========= Start Update category update data ======");
-          
-          ObjectMapper objectMappter = new ObjectMapper();
-          MMap out = new MMap();
-          MMap body = param.getMMap("body");
-          MMap input = new MMap();
-          input.setInt("user_id", user_id);
-          input.setInt("id", body.getInt("id"));
-          input.setString("name", body.getString("name"));
-          input.setString("description", body.getString("description"));
-          input.setString("status", Status.Modify.getValueStr());
+            log.info("========= Start Update category update data ======");
 
-          log.info("====== Value : "+objectMappter.writeValueAsString(input));
+            ObjectMapper objectMappter = new ObjectMapper();
+            MMap out = new MMap();
+            MMap body = param.getMMap("body");
+            MMap input = new MMap();
+            input.setInt("user_id", user_id);
+            input.setInt("id", body.getInt("id"));
+            input.setString("name", body.getString("name"));
+            input.setString("description", body.getString("description"));
+            input.setString("status", Status.Modify.getValueStr());
 
-          int update = categoryService.update(input);
-          if (update > 0) {
-              out.setString(StatusYN.STATUS, StatusYN.Y);
-          }
+            log.info("====== Value : " + objectMappter.writeValueAsString(input));
 
-          responseData.setBody(out);
+            int update = categoryService.update(input);
+            if (update > 0) {
+                out.setString(StatusYN.STATUS, StatusYN.Y);
+            }
 
-          log.info("====== Response data: "+responseData);
-          log.info("====== End Update category update data ======");
+            responseData.setBody(out);
 
-        } catch (ValidatorException ev){
+            log.info("====== Response data: " + responseData);
+            log.info("====== End Update category update data ======");
+
+        } catch (ValidatorException ev) {
             ev.printStackTrace();
             log.error("======= error:", ev);
-            ErrorMessage message = MessageUtil.message("category_"+ev.getKey(), lang);
+            ErrorMessage message = MessageUtil.message("category_" + ev.getKey(), lang);
             responseData.setError(message);
             return responseData;
         } catch (Exception e) {
@@ -163,14 +163,14 @@ public class CategoryAPI {
         TransactionStatus transactionStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
         try {
             log.info("============ Start delete api category delete =============");
-            
+
             ObjectMapper objectMapper = new ObjectMapper();
             MMap out = new MMap();
             out.setString(StatusYN.STATUS, StatusYN.N);
             MultiMap body = param.getMultiMap("body");
 
-            log.info("======= delete values: "+objectMapper.writeValueAsString(body));
-            
+            log.info("======= delete values: " + objectMapper.writeValueAsString(body));
+
             if (body.size() > 0) {
                 MMap input = new MMap();
                 for (MMap data : body.toListData()) {
@@ -183,18 +183,18 @@ public class CategoryAPI {
                 transactionManager.commit(transactionStatus);
                 out.setString(StatusYN.STATUS, StatusYN.Y);
                 responseData.setBody(out);
-                log.info("============ Response Date: "+ objectMapper.writeValueAsString(responseData));
+                log.info("============ Response Date: " + objectMapper.writeValueAsString(responseData));
                 log.info("============ End delete api category delete =============");
-                
+
             }
 
         } catch (ValidatorException ev) {
             ev.printStackTrace();
             log.error("error Application Exception api save category", ev);
-            ErrorMessage message = MessageUtil.message("category_"+ev.getKey(), lang);
+            ErrorMessage message = MessageUtil.message("category_" + ev.getKey(), lang);
             responseData.setError(message);
             return responseData;
-        }catch (Exception e) {
+        } catch (Exception e) {
             transactionManager.rollback(transactionStatus);
             e.printStackTrace();
             log.error("get error exception delete api category", e);

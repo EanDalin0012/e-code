@@ -11,9 +11,9 @@ import com.ecode.core.map.MMap;
 import com.ecode.core.map.MultiMap;
 
 @Service
-public class UserServiceImplement implements UserService{
+public class UserServiceImplement implements UserService {
 
-	@Autowired
+    @Autowired
     private UserDao userDao;
 
     @Override

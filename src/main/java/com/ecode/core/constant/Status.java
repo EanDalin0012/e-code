@@ -1,7 +1,7 @@
 package com.ecode.core.constant;
 
 public enum Status {
-	Active("1", "Active "),
+    Active("1", "Active "),
     InActive("2", "InActive"),
     Modify("3", "Modify"),
     Request("4", "Request"),

@@ -9,9 +9,9 @@ import com.ecode.core.map.MMap;
 
 
 @Service
-public class ResourceFileInfoServiceImplement implements ResourceFileInfoService{
-	
-	@Autowired
+public class ResourceFileInfoServiceImplement implements ResourceFileInfoService {
+
+    @Autowired
     private ResourceFileInfoDao resourceFileInfoDao;
 
     @Override

@@ -10,21 +10,21 @@ import com.ecode.core.exception.ValidatorException;
 import com.ecode.core.map.MMap;
 
 @Service
-public class ProductDetailReferencesServiceImplement implements ProductDetailReferencesService{
+public class ProductDetailReferencesServiceImplement implements ProductDetailReferencesService {
 
-	@Autowired
-	private ProductDetailReferencesDao productDetailReferencesDao;
-	
-	@Override
-	public int save(MMap param) throws ValidatorException {
-		ValidatorUtil.validate(param, "product_id","staus","product_detials_id","resource_id");
-		return productDetailReferencesDao.save(param);
-	}
+    @Autowired
+    private ProductDetailReferencesDao productDetailReferencesDao;
 
-	@Override
-	public int delete(MMap param) {
-		// TODO Auto-generated method stub
-		return productDetailReferencesDao.delete(param);
-	}
+    @Override
+    public int save(MMap param) throws ValidatorException {
+        ValidatorUtil.validate(param, "product_id", "status", "product_detials_id", "resource_id");
+        return productDetailReferencesDao.save(param);
+    }
+
+    @Override
+    public int delete(MMap param) {
+        // TODO Auto-generated method stub
+        return productDetailReferencesDao.delete(param);
+    }
 
 }

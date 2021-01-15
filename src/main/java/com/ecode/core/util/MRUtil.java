@@ -283,9 +283,9 @@ public class MRUtil extends StringUtils {
      * </pre>
      *
      * @param targetString
+     * @return boolean
      * @throws
      * @logicalName
-     * @return boolean
      * @fullPath
      */
     public static boolean stringToBoolean(String targetString) {
@@ -554,9 +554,9 @@ public class MRUtil extends StringUtils {
      *                   <B>Examples:</B>
      *                   <DD>
      *                   <pre>
-     *                   String oString = null;
-     *                   oString = StringUTL.getLTRIM(&quot;	1234 &quot;);
-     *                   </pre>
+     *                                     String oString = null;
+     *                                     oString = StringUTL.getLTRIM(&quot;	1234 &quot;);
+     *                                     </pre>
      */
     public static String getLTRIM(String iString) {
 
@@ -584,9 +584,9 @@ public class MRUtil extends StringUtils {
      *                   <DD>
      *
      *                   <pre>
-     *                   String oString = null;
-     *                   oString = StringUTL.getRTRIM(&quot;1224 &quot;);
-     *                   </pre>
+     *                                     String oString = null;
+     *                                     oString = StringUTL.getRTRIM(&quot;1224 &quot;);
+     *                                     </pre>
      */
     public static String getRTRIM(String iString) {
 

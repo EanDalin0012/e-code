@@ -4,16 +4,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 @Configuration
-public class configLocaleResolver extends AcceptHeaderLocaleResolver implements WebMvcConfigurer{
+public class configLocaleResolver extends AcceptHeaderLocaleResolver implements WebMvcConfigurer {
 
-	List<Locale> LOCALES = Arrays.asList(
+    List<Locale> LOCALES = Arrays.asList(
             new Locale("en"),
             new Locale("kh"),
             new Locale("ch"));

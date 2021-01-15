@@ -42,7 +42,6 @@ public class WebSecurityConfigAdapter extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         "/api/web/**"
                         , "/api/mobile/**"
-                        ,"/file/**"
                         , "/401.html"
                         , "/404.html"
                         , "/500.html");

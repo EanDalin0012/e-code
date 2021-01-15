@@ -6,9 +6,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class ECodeApplicationTests {
 
-	@Test
-	void contextLoads() {
-		System.out.print("Testing");
-	}
+    @Test
+    void contextLoads() {
+        System.out.print("Testing");
+    }
 
 }

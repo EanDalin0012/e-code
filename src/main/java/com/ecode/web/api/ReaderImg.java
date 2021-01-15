@@ -1,7 +1,11 @@
 package com.ecode.web.api;
+
 import com.ecode.core.map.MMap;
 import com.ecode.core.util.SystemUtil;
 import com.ecode.web.service.implement.ReaderImgServiceImplement;
+import com.ecode.web.util.ExistsFile;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.commons.io.IOUtils;
 import org.imgscalr.Scalr;
 import org.slf4j.Logger;
@@ -34,40 +38,49 @@ public class ReaderImg {
     }
 
     @GetMapping("/read/{resource_id}")
-    public ResponseEntity<byte[]>  resourcesImage(@PathVariable("resource_id") String resource_id) throws IOException {
+    public ResponseEntity<byte[]> resourcesImage(@PathVariable("resource_id") String resource_id) throws IOException {
         byte bytes[] = null;
         HttpHeaders headers = new HttpHeaders();
         try {
+            ObjectMapper objectMapper = new ObjectMapper();
             MMap input = new MMap();
             input.setString("id", resource_id);
             MMap imgInfo = readerImgServiceImp.getResourcesImageById(input);
-            if(imgInfo != null) {
 
+            log.info("file info values: " + objectMapper.writeValueAsString(imgInfo));
+
+            if (imgInfo != null) {
                 String path = imgInfo.getString("file_source");
                 String filepath = SystemUtil.projectPath() + path;
                 String fileExt = imgInfo.getString("file_extension");
 
-                File file = new File(filepath);
-                InputStream targetStream = new FileInputStream(file);
-                bytes = IOUtils.toByteArray(targetStream);
+                if (ExistsFile.exists(filepath)) {
+                    File file = new File(filepath);
+                    InputStream targetStream = new FileInputStream(file);
+                    bytes = IOUtils.toByteArray(targetStream);
 
-                if (fileExt.equalsIgnoreCase("JPG")) {
-                    headers.setContentType(MediaType.IMAGE_JPEG);
-                } else if (fileExt.equalsIgnoreCase("PNG")) {
-                    headers.setContentType(MediaType.IMAGE_PNG);
+                    if (fileExt.equalsIgnoreCase("JPG")) {
+                        headers.setContentType(MediaType.IMAGE_JPEG);
+                    } else if (fileExt.equalsIgnoreCase("PNG")) {
+                        headers.setContentType(MediaType.IMAGE_PNG);
+                    } else {
+                        headers.setContentType(MediaType.IMAGE_PNG);
+                    }
+                    headers.setContentLength(bytes.length);
+                    return new ResponseEntity<byte[]>(bytes, headers, HttpStatus.OK);
                 } else {
-                    headers.setContentType(MediaType.IMAGE_PNG);
+                    return null;
                 }
-                headers.setContentLength(bytes.length);
             }
-        }catch (Exception e) {
+
+        } catch (Exception e) {
             log.error("error read image", e);
         }
-        return new ResponseEntity<byte[]>(bytes, headers, HttpStatus.OK);
+        return null;
     }
 
     @GetMapping(value = "/i")
-    public  ResponseEntity<byte[]> Data() throws IOException {
+    public ResponseEntity<byte[]> Data() throws IOException {
 //        MMap input = new MMap();
 //        String resource_id = "448648c1-2bb1-4506-a1ad-d80af03db2c4-20201105073121";
 //        input.setString("id", resource_id);

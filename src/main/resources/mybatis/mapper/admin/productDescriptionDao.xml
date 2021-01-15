@@ -2,6 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ecode.admin.dao.ProductDescriptionDao">
 
+    <resultMap type="MMap" id="retrieveById">
+        <id property="id" column="id"/>
+        <result property="context_ch" column="context_ch"/>
+        <result property="context_en" column="context_en"/>
+        <result property="context_kh" column="context_kh"/>
+        <association property="rescource_list" resultMap="rescourceList" javaType="list"/>
+    </resultMap>
+
+    <resultMap type="MMap" id="rescourceList">
+        <result property="resource_id" column="resource_id"/>
+    </resultMap>
+
     <select id="retrieveList" resultType="MMap">
         <![CDATA[
 		  SELECT 
@@ -20,24 +32,22 @@
 	     ]]>
     </select>
 
-	<select id="retrieveByID" resultType="MMap">
-	     <![CDATA[
-			   SELECT 
-				pd.id
-			 , pd.context_kh
-			 , pd.context_en
-			 , pd.context_ch
-			 , pd.create_date
-			 , pd.modify_date
-			 , pd.status
-			 , (SELECT u.user_name FROM user_ u WHERE u.id = pd.create_by) as "create_by"
-			 , (SELECT u.user_name FROM user_ u WHERE u.id = pd.modify_by) as "modify_by"
+    <select id="retrieveProductDescriptionByProductID" resultMap="retrieveById">
+        <![CDATA[
+		  SELECT 
+		  		pd.id
+				, pdr.resource_id
+				, pdr.resource_id as "a"
+				, pd.context_ch
+				, pd.context_en
+				, pd.context_kh
 			FROM
-			product_detials pd
-			where pd.ids = #{id}
+			product_details_references pdr 
+			INNER JOIN product_detials pd on pd.id = pdr.product_detials_id
+			WHERE pd.id = #{product_detials_id}
 		 ]]>
-	</select>
-	    
+    </select>
+
     <insert id="save">
         <![CDATA[
 	    	INSERT INTO product_detials

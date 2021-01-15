@@ -11,9 +11,9 @@ import com.ecode.core.map.MMap;
 import com.ecode.core.map.MultiMap;
 
 @Service
-public class ProductServiceImplement implements ProductService{
-	
-	@Autowired
+public class ProductServiceImplement implements ProductService {
+
+    @Autowired
     private ProductDao productDao;
 
     @Override
@@ -30,7 +30,7 @@ public class ProductServiceImplement implements ProductService{
 
     @Override
     public int delete(MMap param) throws ValidatorException {
-        ValidatorUtil.validate(param, "id", "status","user_id");
+        ValidatorUtil.validate(param, "id", "status", "user_id");
         return productDao.delete(param);
     }
 

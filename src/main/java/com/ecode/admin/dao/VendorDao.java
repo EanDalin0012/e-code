@@ -6,10 +6,15 @@ import com.ecode.core.map.MultiMap;
 
 @Mapper
 public interface VendorDao {
-	MultiMap retrieveList(MMap param);
+    MultiMap retrieveList(MMap param);
+
     int save(MMap param);
+
     int delete(MMap param);
+
     int update(MMap param);
+
     int count();
+
     int sequence();
 }

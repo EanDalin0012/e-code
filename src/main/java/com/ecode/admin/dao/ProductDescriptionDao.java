@@ -7,9 +7,13 @@ import com.ecode.core.map.MultiMap;
 
 @Mapper
 public interface ProductDescriptionDao {
-	MultiMap retrieveList(MMap param);
-	MultiMap retrieveByID(MMap param);
+    MultiMap retrieveList(MMap param);
+
     int save(MMap param);
+
     int delete(MMap param);
+
     int update(MMap param);
+
+    MMap retrieveProductDescriptionByProductID(MMap param);
 }

@@ -11,9 +11,9 @@ import com.ecode.core.map.MMap;
 import com.ecode.core.map.MultiMap;
 
 @Service
-public class CardIdentifyServiceImplement implements CardIdentifyService{
+public class CardIdentifyServiceImplement implements CardIdentifyService {
 
-	@Autowired
+    @Autowired
     private CardIdentifyDao cardIdentifyDao;
 
     @Override
@@ -30,19 +30,19 @@ public class CardIdentifyServiceImplement implements CardIdentifyService{
 
     @Override
     public int save(MMap param) throws ValidatorException {
-        ValidatorUtil.validate(param, "card_id","status");
+        ValidatorUtil.validate(param, "card_id", "status");
         return cardIdentifyDao.save(param);
     }
 
     @Override
     public int delete(MMap param) throws ValidatorException {
-        ValidatorUtil.validate(param, "id","status");
+        ValidatorUtil.validate(param, "id", "status");
         return cardIdentifyDao.delete(param);
     }
 
     @Override
     public int update(MMap param) throws ValidatorException {
-        ValidatorUtil.validate(param, "id","card_id","status");
+        ValidatorUtil.validate(param, "id", "card_id", "status");
         return cardIdentifyDao.update(param);
     }
 

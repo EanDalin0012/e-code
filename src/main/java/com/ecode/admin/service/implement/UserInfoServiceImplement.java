@@ -11,9 +11,9 @@ import com.ecode.core.map.MMap;
 import com.ecode.core.map.MultiMap;
 
 @Service
-public class UserInfoServiceImplement implements UserInfoService{
+public class UserInfoServiceImplement implements UserInfoService {
 
-	@Autowired
+    @Autowired
     private UserInfoDao userInfoDao;
 
     @Override
@@ -24,19 +24,19 @@ public class UserInfoServiceImplement implements UserInfoService{
 
     @Override
     public int save(MMap param) throws ValidatorException {
-        ValidatorUtil.validate(param, "id","first_name","last_name","gender","date_birth","email","contact","status","user_id");
+        ValidatorUtil.validate(param, "id", "first_name", "last_name", "gender", "date_birth", "email", "contact", "status", "user_id");
         return userInfoDao.save(param);
     }
 
     @Override
     public int delete(MMap param) throws ValidatorException {
-        ValidatorUtil.validate(param, "status","id");
+        ValidatorUtil.validate(param, "status", "id");
         return userInfoDao.delete(param);
     }
 
     @Override
     public int update(MMap param) throws ValidatorException {
-        ValidatorUtil.validate(param, "id","first_name","last_name","gender","date_birth","email","contact","status","user_id");
+        ValidatorUtil.validate(param, "id", "first_name", "last_name", "gender", "date_birth", "email", "contact", "status", "user_id");
         return userInfoDao.update(param);
     }
 

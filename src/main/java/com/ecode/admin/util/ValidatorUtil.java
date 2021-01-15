@@ -1,4 +1,5 @@
 package com.ecode.admin.util;
+
 import java.math.BigDecimal;
 
 import org.slf4j.Logger;
@@ -7,14 +8,15 @@ import org.slf4j.LoggerFactory;
 import com.ecode.core.exception.ValidatorException;
 import com.ecode.core.map.MMap;
 import com.ecode.core.util.MRUtil;
+
 public class ValidatorUtil {
-	private static final Logger logger = LoggerFactory.getLogger(ValidatorUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(ValidatorUtil.class);
 
     public static void validate(MMap ipParam, String... ipFields) throws ValidatorException {
         for (String sKey : ipFields) {
-            if ( MRUtil.isEmpty(MRUtil.trim(ipParam.getString(sKey))) || sKey == null) {
+            if (MRUtil.isEmpty(MRUtil.trim(ipParam.getString(sKey))) || sKey == null) {
                 logger.info("Error : " + sKey + " is empty !!!");
-                throw new ValidatorException(sKey, "Invalid field[" + sKey + "]. Please add "+sKey+"field");
+                throw new ValidatorException(sKey, "Invalid field[" + sKey + "]. Please add " + sKey + "field");
             }
         }
     }
@@ -23,7 +25,7 @@ public class ValidatorUtil {
         for (String sKey : ipFields) {
             if (MRUtil.isNull(ipParam.getString(sKey))) {
                 logger.info(String.join(" ", "<<<<< *****", sKey, "is null !!!"));
-                throw new ValidatorException(sKey, "field["+sKey+"] is null");
+                throw new ValidatorException(sKey, "field[" + sKey + "] is null");
             }
         }
     }

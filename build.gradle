@@ -1,25 +1,24 @@
 plugins {
-	id 'org.springframework.boot' version '2.4.0'
-	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-	id 'java'
-	id 'war'
+    id 'org.springframework.boot' version '2.4.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'war'
 }
-
 group = 'com'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-web-services'
-	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.4'
-	
-	compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.4'
+
+    compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
     compile group: 'org.springframework', name: 'spring-tx', version: '5.2.7.RELEASE'
     compile group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
     compile group: 'commons-codec', name: 'commons-codec', version: '1.14'
@@ -29,17 +28,17 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.3.5.RELEASE'
     compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.3.3.RELEASE'
     compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '3.0.0-M4'
-   compile group: 'javax.xml', name: 'jaxb-impl', version: '2.1'
+    compile group: 'javax.xml', name: 'jaxb-impl', version: '2.1'
     compile group: 'com.google.guava', name: 'guava', version: '29.0-jre'
     compile group: 'commons-io', name: 'commons-io'
-    
-	
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'org.postgresql:postgresql'
-	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'org.postgresql:postgresql'
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }

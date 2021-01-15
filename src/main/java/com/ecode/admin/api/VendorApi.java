@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 @RequestMapping(value = "/api/vendor/v1")
 public class VendorApi {
 
-	private static final Logger log = LoggerFactory.getLogger(VendorApi.class);
+    private static final Logger log = LoggerFactory.getLogger(VendorApi.class);
 
     @Autowired
     private VendorServiceImplement vendorService;
@@ -38,24 +38,24 @@ public class VendorApi {
     private PlatformTransactionManager transactionManager;
 
     @GetMapping(value = "/list")
-    public ResponseData<MultiMap> list (@RequestParam("userId") int user_id, @RequestParam("lang") String lang) {
+    public ResponseData<MultiMap> list(@RequestParam("userId") int user_id, @RequestParam("lang") String lang) {
         ResponseData<MultiMap> responseData = new ResponseData<>();
         try {
-          log.info("====== Start Vendor get list ====");
+            log.info("====== Start Vendor get list ====");
 
-          ObjectMapper objectMapper = new ObjectMapper();
-          MMap input = new MMap();
-          input.setString("status", Status.Delete.getValueStr());
-          MultiMap responseBody = vendorService.retrieveList(input);
-          responseData.setBody(responseBody);
+            ObjectMapper objectMapper = new ObjectMapper();
+            MMap input = new MMap();
+            input.setString("status", Status.Delete.getValueStr());
+            MultiMap responseBody = vendorService.retrieveList(input);
+            responseData.setBody(responseBody);
 
-          log.info("====== Vendor list value:"+objectMapper.writeValueAsString(responseData));
-          log.info("<===== End Vendor get list ====");
-          
-          return responseData;
+            log.info("====== Vendor list value:" + objectMapper.writeValueAsString(responseData));
+            log.info("<===== End Vendor get list ====");
+
+            return responseData;
         } catch (ValidatorException ex) {
             log.error("get error", ex);
-            ErrorMessage message = MessageUtil.message("vendor_"+ex.getKey(), lang);
+            ErrorMessage message = MessageUtil.message("vendor_" + ex.getKey(), lang);
             responseData.setError(message);
             return responseData;
         } catch (Exception e) {
@@ -64,16 +64,16 @@ public class VendorApi {
             responseData.setError(message);
             return responseData;
         }
-        
+
     }
 
     @PostMapping(value = "/save")
-    public ResponseData<MMap> save (@RequestParam("userId") int user_id, @RequestParam("lang") String lang, @RequestBody MMap param) {
+    public ResponseData<MMap> save(@RequestParam("userId") int user_id, @RequestParam("lang") String lang, @RequestBody MMap param) {
         return execute("save", user_id, lang, param.getMMap("body"));
     }
 
     @PostMapping(value = "/update")
-    public ResponseData<MMap> update (@RequestParam("userId") int user_id, @RequestParam("lang") String lang, @RequestBody MMap param) {
+    public ResponseData<MMap> update(@RequestParam("userId") int user_id, @RequestParam("lang") String lang, @RequestBody MMap param) {
         return execute("update", user_id, lang, param.getMMap("body"));
     }
 
@@ -85,16 +85,16 @@ public class VendorApi {
     private ResponseData<MMap> execute(String function, int user_id, String lang, MMap param) {
         ResponseData<MMap> responseData = new ResponseData<>();
         try {
-        	log.info("========= Start Vendor "+function+"==========");
-        	
-        	ObjectMapper objectMapper = new ObjectMapper();
+            log.info("========= Start Vendor " + function + "==========");
+
+            ObjectMapper objectMapper = new ObjectMapper();
             MMap input = new MMap();
             MMap out = new MMap();
             out.setString(StatusYN.STATUS, StatusYN.N);
-            input.setInt("user_id",     user_id);
-            input.setString("name",     param.getString("name"));
-            input.setString("contact",  param.getString("contact"));
-            input.setString("email",    param.getString("email"));
+            input.setInt("user_id", user_id);
+            input.setString("name", param.getString("name"));
+            input.setString("contact", param.getString("contact"));
+            input.setString("email", param.getString("email"));
             input.setString("description", param.getString("description"));
             input.setString("other_contact", param.getString("other_contact"));
             input.setString("address", param.getString("address"));
@@ -102,21 +102,21 @@ public class VendorApi {
 
             if (function == "save") {
                 int id = vendorService.sequence();
-                input.setInt("id",          id);
-                
-                log.info("========== Values:"+objectMapper.writeValueAsString(input));
-                
+                input.setInt("id", id);
+
+                log.info("========== Values:" + objectMapper.writeValueAsString(input));
+
                 int save = vendorService.save(input);
-                if (save > 0 ) {
+                if (save > 0) {
                     out.setString(StatusYN.STATUS, StatusYN.Y);
                 }
 
             } else if (function == "update") {
-                input.setInt("id",          param.getInt("id"));
+                input.setInt("id", param.getInt("id"));
                 int update = vendorService.update(input);
-                
-                log.info("========== Values:"+objectMapper.writeValueAsString(input));
-                
+
+                log.info("========== Values:" + objectMapper.writeValueAsString(input));
+
                 if (update > 0) {
                     out.setString(StatusYN.STATUS, StatusYN.Y);
                 }
@@ -124,17 +124,17 @@ public class VendorApi {
 
             responseData.setBody(out);
 
-            log.info("===== Vendor response : "+objectMapper.writeValueAsString(responseData));
+            log.info("===== Vendor response : " + objectMapper.writeValueAsString(responseData));
             log.info("===== End Vendor save api ====");
-            
+
             return responseData;
         } catch (ValidatorException ex) {
             log.error("====get error", ex);
-            ErrorMessage message = MessageUtil.message("vendor_"+ex.getKey(), lang);
+            ErrorMessage message = MessageUtil.message("vendor_" + ex.getKey(), lang);
             responseData.setError(message);
             return responseData;
         } catch (Exception e) {
-            log.error("========error exception:",e);
+            log.error("========error exception:", e);
             ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
             responseData.setError(message);
             return responseData;
@@ -148,11 +148,11 @@ public class VendorApi {
             log.info("=========Start Delete Vendor========");
 
             ObjectMapper objectMapper = new ObjectMapper();
-            log.info("========= Delete values:"+objectMapper.writeValueAsString(param));
-            
+            log.info("========= Delete values:" + objectMapper.writeValueAsString(param));
+
             MMap out = new MMap();
             out.setString(StatusYN.STATUS, StatusYN.N);
-            if(param.size() > 0) {
+            if (param.size() > 0) {
                 MMap input = new MMap();
                 for (MMap data : param.toListData()) {
                     input.setInt("id", data.getInt("id"));
@@ -165,14 +165,14 @@ public class VendorApi {
                 out.setString("status", "Y");
                 responseData.setBody(out);
             }
-            
-            log.info("======== Response Values:"+objectMapper.writeValueAsString(responseData));
+
+            log.info("======== Response Values:" + objectMapper.writeValueAsString(responseData));
             log.info("=========Start Delete Vendor========");
-            
+
             return responseData;
-        }  catch (ValidatorException ex) {
+        } catch (ValidatorException ex) {
             log.error("get error", ex);
-            ErrorMessage message = MessageUtil.message("vendor_"+ex.getKey(), lang);
+            ErrorMessage message = MessageUtil.message("vendor_" + ex.getKey(), lang);
             responseData.setError(message);
             return responseData;
         } catch (Exception e) {
@@ -181,6 +181,6 @@ public class VendorApi {
             responseData.setError(message);
             return responseData;
         }
-        
+
     }
 }

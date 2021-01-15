@@ -1,9 +1,10 @@
 package com.ecode.core.map;
+
 import java.math.BigDecimal;
 import java.util.*;
 
-public class MultiMap extends ArrayList<LinkedHashMap<String, Object>>{
-	private static final long serialVersionUID = 8154940219462381299L;
+public class MultiMap extends ArrayList<LinkedHashMap<String, Object>> {
+    private static final long serialVersionUID = 8154940219462381299L;
 
     private boolean nullToInitialize = false;
 

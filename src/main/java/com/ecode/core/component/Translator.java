@@ -3,19 +3,20 @@ package com.ecode.core.component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
+
 import java.util.Locale;
 
 @Component
 public class Translator {
 
-	private static ReloadableResourceBundleMessageSource translatorSource;
-	
-	@Autowired
+    private static ReloadableResourceBundleMessageSource translatorSource;
+
+    @Autowired
     Translator(ReloadableResourceBundleMessageSource messageSource) {
         Translator.translatorSource = messageSource;
     }
-	
-	public static String translate(String languageCode, String msgCode) {
+
+    public static String translate(String languageCode, String msgCode) {
         String language = "en";
         if (languageCode == "kh") {
             language = "kh";

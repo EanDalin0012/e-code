@@ -1,7 +1,7 @@
 package com.ecode.admin.constant;
 
 public enum BizResultCodeType {
-	FILE_TYPE_CODE("01", "file type code for corp-banking"),
+    FILE_TYPE_CODE("01", "file type code for corp-banking"),
     CHANNEL_TYPE_CODE_CORP_BANKING("01", "Channel Type Code Corp Banking"),
 
     RESPONSE_SUCCESS_CODE("0000", "Response success code"),

@@ -10,9 +10,9 @@ import com.ecode.core.map.MMap;
 import com.ecode.core.map.MultiMap;
 
 @Service
-public class VendorServiceImplement implements VendorService{
+public class VendorServiceImplement implements VendorService {
 
-	@Autowired
+    @Autowired
     private VendorDao vendorDao;
 
     @Override
@@ -22,7 +22,7 @@ public class VendorServiceImplement implements VendorService{
     }
 
     @Override
-    public int save(MMap param) throws  ValidatorException {
+    public int save(MMap param) throws ValidatorException {
         ValidatorUtil.validate(param, "id", "name", "contact", "user_id", "status");
         return vendorDao.save(param);
     }
@@ -34,7 +34,7 @@ public class VendorServiceImplement implements VendorService{
     }
 
     @Override
-    public int update(MMap param) throws  ValidatorException {
+    public int update(MMap param) throws ValidatorException {
         ValidatorUtil.validate(param, "id", "name", "contact", "user_id", "status");
         return vendorDao.update(param);
     }

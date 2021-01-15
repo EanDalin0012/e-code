@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class Admin {
-	
-	@GetMapping(value = "/index")
-	public String Index() {
-		return "Index";
-	}
+
+    @GetMapping(value = "/index")
+    public String Index() {
+        return "Index";
+    }
 
 }

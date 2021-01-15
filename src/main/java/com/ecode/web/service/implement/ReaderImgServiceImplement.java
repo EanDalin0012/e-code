@@ -11,6 +11,7 @@ public class ReaderImgServiceImplement implements ReaderImgService {
 
     @Autowired
     private ReaderImgDao readerImgDao;
+
     @Override
     public MMap getResourcesImageById(MMap param) {
         return readerImgDao.getResourcesImageById(param);

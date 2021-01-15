@@ -7,6 +7,7 @@ public class SystemUtil {
     public static String projectPath() {
         // Java 7
         // System.out.println(Paths.get("").toAbsolutePath().toString());
+        // System.getProperty("catalina.base");
         return System.getProperty("user.dir");
     }
 
@@ -16,7 +17,7 @@ public class SystemUtil {
 
     private static String currentPath() {
         Path currentWorkingDir = Paths.get("").toAbsolutePath();
-        System.out.println("\n\npath**:"+currentWorkingDir.normalize().toString());
+        System.out.println("\n\npath**:" + currentWorkingDir.normalize().toString());
         String path = currentWorkingDir.normalize().toString();
         return path;
     }

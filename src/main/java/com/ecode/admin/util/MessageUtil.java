@@ -5,8 +5,8 @@ import com.ecode.core.constant.ErrorCode;
 import com.ecode.core.dto.ErrorMessage;
 
 public class MessageUtil {
-	public static ErrorMessage message(String key, String lang) {
-		ErrorMessage data = new ErrorMessage();
+    public static ErrorMessage message(String key, String lang) {
+        ErrorMessage data = new ErrorMessage();
         String message = Translator.translate(lang, key);
         if (ErrorCode.EXCEPTION_ERR == key) {
             message = Translator.translate(lang, key);

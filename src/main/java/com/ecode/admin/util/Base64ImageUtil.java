@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 
 public class Base64ImageUtil {
-	private static final Logger log = LoggerFactory.getLogger(Base64ImageUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(Base64ImageUtil.class);
 
     public static String decodeToImage(String path, String base64, String fileName, String fileExtension) {
         log.info("===========Start write base64 ========");
@@ -26,15 +26,15 @@ public class Base64ImageUtil {
                 log.info("path exits");
                 f.mkdirs();
             }
-            fullPath = path+"/"+fileName+""+fileExtension;
-            log.info("full path:"+fullPath);
-            byte[] base64Val=convertToImg(base64);
-            writeByteToImageFile(base64Val, mkdir+"/"+fileName+fileExtension);
+            fullPath = path + "/" + fileName + "" + fileExtension;
+            log.info("full path:" + fullPath);
+            byte[] base64Val = convertToImg(base64);
+            writeByteToImageFile(base64Val, mkdir + "/" + fileName + fileExtension);
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             log.error("write base64 error", e);
-            return  "";
+            return "";
         }
 
         log.info("===========End write base64 ========");
@@ -57,9 +57,10 @@ public class Base64ImageUtil {
         return base64Image;
     }
 
-    private static byte[] convertToImg(String base64) throws IOException{
+    private static byte[] convertToImg(String base64) throws IOException {
         return Base64.decodeBase64(base64);
     }
+
     private static void writeByteToImageFile(byte[] imgBytes, String imgFileName) throws IOException {
         File imgFile = new File(imgFileName);
         BufferedImage img = ImageIO.read(new ByteArrayInputStream(imgBytes));

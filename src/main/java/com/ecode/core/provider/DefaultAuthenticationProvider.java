@@ -91,7 +91,7 @@ public class DefaultAuthenticationProvider implements AuthenticationProvider {
                     grantedAuthorities);
 
         } catch (UsernameNotFoundException ex) {
-            log.info("\n<<<<<============== get error user name not found exception ===============>>>>>>>>>>>>\n" +ex);
+            log.info("\n<<<<<============== get error user name not found exception ===============>>>>>>>>>>>>\n" + ex);
             throw ex;
         } catch (Exception e) {
             log.error("\n ==>> ***get error class default authentication exception ***<<==\n", e);

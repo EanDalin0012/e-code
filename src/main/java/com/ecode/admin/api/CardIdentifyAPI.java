@@ -21,38 +21,37 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/api/card-identify/v1")
 public class CardIdentifyAPI {
-	private static final Logger log = LoggerFactory.getLogger(CardIdentifyAPI.class);
+    private static final Logger log = LoggerFactory.getLogger(CardIdentifyAPI.class);
 
     @Autowired
     private CardIdentifyServiceImplement cardIdentifyService;
-    
+
     @PostMapping(value = "/id")
     public ResponseData<MMap> retrieveCardIdentifyById(@RequestBody MMap param, @RequestParam("userId") int user_id, @RequestParam("lang") String lang) {
         ResponseData<MMap> responseData = new ResponseData<>();
         MMap out = new MMap();
 
         try {
-        	log.info("======== Start retrieve card identify by id=======");
-        	
+            log.info("======== Start retrieve card identify by id=======");
+
             MMap body = param.getMMap("body");
             MMap input = new MMap();
             input.setString("card_id", body.getString("card_id"));
             MMap data = cardIdentifyService.retrieveCardIdentifyById(input);
             responseData.setBody(data);
             out.setString("status", StatusYN.Y);
-            
+
             ObjectMapper mapper = new ObjectMapper();
             log.info("======== Data:", mapper.writeValueAsString(responseData));
             log.info("======== End retrieve card identify by id=======");
-            
+
             return responseData;
         } catch (ValidatorException ex) {
             log.error("get error api /api/card-identify", ex);
-            ErrorMessage message = MessageUtil.message("card_identify_"+ex.getKey(), lang);
+            ErrorMessage message = MessageUtil.message("card_identify_" + ex.getKey(), lang);
             responseData.setError(message);
             return responseData;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("get error api /api/card-identify", e);
             ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
             responseData.setError(message);

@@ -30,13 +30,13 @@ import org.slf4j.LoggerFactory;
 @RequestMapping(value = "/api/company/v1")
 public class CompanyAPI {
 
-	private static final Logger log = LoggerFactory.getLogger(CompanyAPI.class);
+    private static final Logger log = LoggerFactory.getLogger(CompanyAPI.class);
 
     @Autowired
     private CompanyServiceImplement companyService;
     @Autowired
     private PlatformTransactionManager transactionManager;
-    
+
     /**
      * <pre>
      *     get list of company
@@ -50,19 +50,19 @@ public class CompanyAPI {
     public ResponseData<MMap> getList(@RequestParam("userId") int user_id, @RequestParam("lang") String lang) {
         ResponseData<MMap> response = new ResponseData<>();
         try {
-        	log.info("========== Start retrieve list ==========");
-        	
-        	ObjectMapper objectMappter = new ObjectMapper();
+            log.info("========== Start retrieve list ==========");
+
+            ObjectMapper objectMappter = new ObjectMapper();
             MMap input = new MMap();
             input.setString("status", Status.Delete.getValueStr());
             MultiMap list = companyService.getList(input);
             MMap out = new MMap();
             out.setMultiMap("list", list);
             response.setBody(out);
-            
-            log.info("========== Response Value:"+ objectMappter.writeValueAsString(response));
+
+            log.info("========== Response Value:" + objectMappter.writeValueAsString(response));
             log.info("========== End retrieve list ==========");
-            
+
             return response;
         } catch (Exception e) {
             log.error("======== get error api company:", e.getMessage());
@@ -82,8 +82,8 @@ public class CompanyAPI {
      * @throws
      **/
     @PostMapping(value = "/save")
-    public ResponseData<MMap> save(@RequestBody MMap param,@RequestParam("userId") int user_id, @RequestParam("lang") String lang) {
-        return execute(param, "save",lang);
+    public ResponseData<MMap> save(@RequestBody MMap param, @RequestParam("userId") int user_id, @RequestParam("lang") String lang) {
+        return execute(param, "save", lang);
     }
 
     /**
@@ -115,15 +115,15 @@ public class CompanyAPI {
         TransactionStatus transactionStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         try {
-        	log.info("========= Start Delete company =====");
-        	
-        	ObjectMapper objectMapper = new ObjectMapper();
-        	MMap header 	= param.getMMap("header");
-            MMap body 		= param.getMMap("body");
-            MultiMap list 	= body.getMultiMap("list");
-            
-            log.info("========= Delete Values:"+ objectMapper.writeValueAsString(list));
-            
+            log.info("========= Start Delete company =====");
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            MMap header = param.getMMap("header");
+            MMap body = param.getMMap("body");
+            MultiMap list = body.getMultiMap("list");
+
+            log.info("========= Delete Values:" + objectMapper.writeValueAsString(list));
+
             for (MMap in : list.toListData()) {
                 MMap input = new MMap();
                 input.setString("status", Status.Delete.getValueStr());
@@ -132,23 +132,22 @@ public class CompanyAPI {
                 System.out.println(input);
                 companyService.delete(input);
             }
-            
+
             MMap resBody = new MMap();
             resBody.setString(StatusYN.STATUS, StatusYN.Y);
             response.setBody(resBody);
             transactionManager.commit(transactionStatus);
-            
-            log.info("=========== Response Data:"+ objectMapper.writeValueAsString(response));
+
+            log.info("=========== Response Data:" + objectMapper.writeValueAsString(response));
             log.info("========= End Delete company =====");
-            
+
             return response;
         } catch (ValidatorException ex) {
-        	log.error("get error api:", ex);
-            ErrorMessage message = MessageUtil.message("company_"+ex.getKey(), lang);
+            log.error("get error api:", ex);
+            ErrorMessage message = MessageUtil.message("company_" + ex.getKey(), lang);
             response.setError(message);
             return response;
-		} 
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("============ get error:", e.getMessage());
             transactionManager.rollback(transactionStatus);
             ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
@@ -169,15 +168,15 @@ public class CompanyAPI {
      */
     private ResponseData<MMap> execute(MMap param, String function, String lang) {
         ResponseData<MMap> response = new ResponseData<>();
-        MMap getHeader 	= param.getMMap("header");
-        MMap body 		= param.getMMap("body");
+        MMap getHeader = param.getMMap("header");
+        MMap body = param.getMMap("body");
         TransactionStatus transactionStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         try {
             MMap input = new MMap();
             MMap responseBody = new MMap();
             String Yn = StatusYN.N;
-            
+
             input.setString("name", body.getString("name"));
             input.setLong("contact", body.getLong("contact"));
             input.setString("email", body.getString("email"));
@@ -205,14 +204,13 @@ public class CompanyAPI {
             responseBody.setString(StatusYN.STATUS, Yn);
             response.setBody(responseBody);
             return response;
-            
-        }catch (ValidatorException ex) {
-        	log.error("get error api comapy", ex);
-            ErrorMessage message = MessageUtil.message("company_"+ex.getKey(), lang);
+
+        } catch (ValidatorException ex) {
+            log.error("get error api comapy", ex);
+            ErrorMessage message = MessageUtil.message("company_" + ex.getKey(), lang);
             response.setError(message);
             return response;
-		} 
-        catch (Exception e) {
+        } catch (Exception e) {
             transactionManager.rollback(transactionStatus);
             log.error("get Exception ", e);
             ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
@@ -227,9 +225,9 @@ public class CompanyAPI {
      * </pre>
      *
      * @param param <pre>
-     *                   header:
-     *                   body: id: int
-     *               </pre>
+     *                                header:
+     *                                body: id: int
+     *                            </pre>
      */
     @PostMapping(value = "/get/value/by/id")
     public ResponseData<MMap> getValueById(@RequestBody MMap param, @RequestParam("userId") int user_id, @RequestParam("lang") String lang) {
@@ -244,14 +242,13 @@ public class CompanyAPI {
 
             return response;
         } catch (ValidatorException ex) {
-        	log.error("======= get error:", ex);
-        	ErrorMessage message = MessageUtil.message("company_"+ex.getKey(), lang);
+            log.error("======= get error:", ex);
+            ErrorMessage message = MessageUtil.message("company_" + ex.getKey(), lang);
             response.setError(message);
             return response;
-		} 
-        catch (Exception e) {
-        	log.error("======= get error:", e);
-        	ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
+        } catch (Exception e) {
+            log.error("======= get error:", e);
+            ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
             response.setError(message);
             return response;
         }

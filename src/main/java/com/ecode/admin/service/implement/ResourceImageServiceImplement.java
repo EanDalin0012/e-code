@@ -10,14 +10,14 @@ import com.ecode.core.exception.ValidatorException;
 import com.ecode.core.map.MMap;
 
 @Service
-public class ResourceImageServiceImplement implements ResourceImageService{
-	
-	@Autowired
+public class ResourceImageServiceImplement implements ResourceImageService {
+
+    @Autowired
     private ResourceImageDao resourceImageDao;
 
     @Override
     public int save(MMap param) throws ValidatorException {
-        ValidatorUtil.validate(param, "id", "original_name", "file_size", "file_type", "file_extension","file_source");
+        ValidatorUtil.validate(param, "id", "original_name", "file_size", "file_type", "file_extension", "file_source");
         return resourceImageDao.save(param);
     }
 

@@ -27,9 +27,9 @@ import org.slf4j.LoggerFactory;
 @RestController
 @RequestMapping(value = "/api/product/v1")
 public class ProductAPI {
-	private static final Logger log = LoggerFactory.getLogger(ProductAPI.class);
-    
-	@Autowired
+    private static final Logger log = LoggerFactory.getLogger(ProductAPI.class);
+
+    @Autowired
     private ProductServiceImplement productService;
     @Autowired
     private PlatformTransactionManager transactionManager;
@@ -56,48 +56,48 @@ public class ProductAPI {
 
     @PostMapping(value = "/switch_web")
     public ResponseData<MMap> updateShowOnWeb(@RequestParam("userId") int user_id, @RequestParam("lang") String lang, @RequestBody MMap param) {
-        return  swichOn("web", param.getMMap("body"), user_id, lang);
+        return swichOn("web", param.getMMap("body"), user_id, lang);
     }
 
     @PostMapping(value = "/switch_mobile")
     public ResponseData<MMap> updateShowOnMobile(@RequestParam("userId") int user_id, @RequestParam("lang") String lang, @RequestBody MMap param) {
-        return  swichOn("mobile", param.getMMap("body"), user_id, lang);
+        return swichOn("mobile", param.getMMap("body"), user_id, lang);
     }
 
     private ResponseData<MMap> execute(String function, int user_id, String lang, MMap param) {
         ResponseData<MMap> responseData = new ResponseData<>();
         try {
-        	log.info("====== Start Product "+function+ "===========");
-        	
+            log.info("====== Start Product " + function + "===========");
+
             ObjectMapper objectMapper = new ObjectMapper();
             MMap input = new MMap();
             MMap out = new MMap();
             out.setString(StatusYN.STATUS, StatusYN.N);
 
-            input.setInt("user_id", 			user_id);
-            input.setString("name", 			param.getString("name"));
-            input.setString("description", 		param.getString("description"));
-            input.setString("status", 			Status.Active.getValueStr());
-            input.setInt("category_id", 		param.getInt("category_id"));
-            input.setString("resource_img_id", 	param.getString("resource_img_id"));
+            input.setInt("user_id", user_id);
+            input.setString("name", param.getString("name"));
+            input.setString("description", param.getString("description"));
+            input.setString("status", Status.Active.getValueStr());
+            input.setInt("category_id", param.getInt("category_id"));
+            input.setString("resource_img_id", param.getString("resource_img_id"));
 
 
             if (function == "save") {
                 int id = productService.sequence();
                 input.setInt("id", id);
-                
+
                 log.info("========== product values:" + objectMapper.writeValueAsString(input));
-                
+
                 int save = productService.save(input);
                 if (save > 0) {
-                	out.setString(StatusYN.STATUS, StatusYN.Y);
+                    out.setString(StatusYN.STATUS, StatusYN.Y);
                 }
 
             } else if (function == "update") {
                 input.setInt("id", param.getInt("id"));
-                
+
                 log.info("========== product values:" + objectMapper.writeValueAsString(input));
-                
+
                 int update = productService.update(input);
                 if (update > 0) {
                     out.setString(StatusYN.STATUS, StatusYN.Y);
@@ -106,13 +106,13 @@ public class ProductAPI {
 
             responseData.setBody(out);
 
-            log.info("===== Product response : " + objectMapper.writeValueAsString(responseData) );
+            log.info("===== Product response : " + objectMapper.writeValueAsString(responseData));
             log.info("===== End product ====");
-            
+
             return responseData;
         } catch (ValidatorException ex) {
             log.error("===== get error save api product:", ex);
-            ErrorMessage message = MessageUtil.message("product_"+ex.getKey(), lang);
+            ErrorMessage message = MessageUtil.message("product_" + ex.getKey(), lang);
             responseData.setError(message);
             return responseData;
         } catch (Exception e) {
@@ -121,18 +121,18 @@ public class ProductAPI {
             responseData.setError(message);
             return responseData;
         }
-       
+
     }
 
     private ResponseData<MMap> delete(int user_id, String lang, MultiMap param) {
         ResponseData<MMap> responseData = new ResponseData<>();
         TransactionStatus transactionStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
-        
+
         try {
             log.info("====== Start Delete Product ========");
-            
+
             ObjectMapper objectMapper = new ObjectMapper();
-            log.info("====== Values:"+objectMapper.writeValueAsString(param));
+            log.info("====== Values:" + objectMapper.writeValueAsString(param));
 
             MMap out = new MMap();
             out.setString(StatusYN.STATUS, StatusYN.N);
@@ -148,19 +148,19 @@ public class ProductAPI {
                 transactionManager.commit(transactionStatus);
                 out.setString(StatusYN.STATUS, StatusYN.Y);
                 responseData.setBody(out);
-                
-                log.info("====== Response Data: "+objectMapper.writeValueAsString(responseData));
+
+                log.info("====== Response Data: " + objectMapper.writeValueAsString(responseData));
                 log.info("====== Start Delete Product ========");
-                
+
             }
         } catch (ValidatorException ex) {
-        	log.error("===== get error save api product:", ex);
-            ErrorMessage message = MessageUtil.message("product_"+ex.getKey(), lang);
+            log.error("===== get error save api product:", ex);
+            ErrorMessage message = MessageUtil.message("product_" + ex.getKey(), lang);
             responseData.setError(message);
             return responseData;
         } catch (Exception e) {
-        	log.error("========== get error exection", e);
-        	ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
+            log.error("========== get error exection", e);
+            ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
             responseData.setError(message);
             return responseData;
         }
@@ -171,19 +171,19 @@ public class ProductAPI {
         ResponseData<MultiMap> responseData = new ResponseData<>();
         try {
             log.info("====== Start Product get list ====");
-            
+
             ObjectMapper objectMapper = new ObjectMapper();
             MMap input = new MMap();
             input.setString("status", Status.Delete.getValueStr());
             MultiMap responseBody = productService.retrieveList(input);
             responseData.setBody(responseBody);
 
-            log.info("===== Product list value:" + objectMapper.writeValueAsString(responseData) );
+            log.info("===== Product list value:" + objectMapper.writeValueAsString(responseData));
             log.info("=====End Product get list====");
 
         } catch (ValidatorException ex) {
             log.error("====== get error api product list:", ex);
-            ErrorMessage message = MessageUtil.message("product_"+ex.getKey(), lang);
+            ErrorMessage message = MessageUtil.message("product_" + ex.getKey(), lang);
             responseData.setError(message);
             return responseData;
         } catch (Exception e) {
@@ -198,10 +198,10 @@ public class ProductAPI {
 
     public ResponseData<MMap> swichOn(String note, MMap data, int user_id, String lang) {
         ResponseData<MMap> responseData = new ResponseData<>();
-        try{
-        	log.info("======= Start Swich ON =======");
-        	
-        	ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            log.info("======= Start Swich ON =======");
+
+            ObjectMapper objectMapper = new ObjectMapper();
             MMap input = new MMap();
             MMap output = new MMap();
             output.setString("status", StatusYN.N);
@@ -209,11 +209,11 @@ public class ProductAPI {
             input.setInt("id", data.getInt("product_id"));
             input.setString("status", Status.Modify.getValueStr());
             input.setInt("user_id", user_id);
-            
+
 
             log.info("========= Values :", objectMapper.writeValueAsString(input));
 
-            if(note == "web") {
+            if (note == "web") {
                 input.setBoolean("web_show", data.getBoolean("value"));
                 int u = productService.updateShowOnWeb(input);
                 if (u > 0) {
@@ -227,20 +227,20 @@ public class ProductAPI {
                 }
             }
             responseData.setBody(output);
-            
-            log.info("========== Response values:"+objectMapper.writeValueAsString(responseData));
+
+            log.info("========== Response values:" + objectMapper.writeValueAsString(responseData));
             log.info("========= End Swich ON =========");
-            
+
             return responseData;
-	    } catch(ValidatorException ex){
-	        log.error("get error updateShowOnWeb api product", ex);
-	        ErrorMessage message = MessageUtil.message("product_"+ex.getKey(), lang);
-	        responseData.setError(message);
-	        return responseData;
-	    } catch(Exception e) {
-	    	 ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
-	         responseData.setError(message);
-	         return responseData;
-	    }  
+        } catch (ValidatorException ex) {
+            log.error("get error updateShowOnWeb api product", ex);
+            ErrorMessage message = MessageUtil.message("product_" + ex.getKey(), lang);
+            responseData.setError(message);
+            return responseData;
+        } catch (Exception e) {
+            ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
+            responseData.setError(message);
+            return responseData;
+        }
     }
 }

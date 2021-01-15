@@ -43,7 +43,7 @@ public class FileSystemStorageService implements FileStorageService {
             InputStream in = getClass()
                     .getResourceAsStream("/com/baeldung/produceimage/data.txt");
             return IOUtils.toByteArray(in);
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw e;
         }
     }

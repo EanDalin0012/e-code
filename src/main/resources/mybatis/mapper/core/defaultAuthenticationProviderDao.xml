@@ -140,7 +140,7 @@
 		]]>
     </update>
 
-    <delete id="deleteUserLockCountBYUserName" >
+    <delete id="deleteUserLockCountBYUserName">
         DELETE from user_lock_count
         WHERE user_name = #{user_name};
     </delete>

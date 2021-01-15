@@ -5,6 +5,7 @@
     <select id="retrieveList" resultType="MMap">
         <![CDATA[
 		   SELECT
+		   DISTINCT ON (id)
 			  p.id
 			, p.name
 		 	, p.description
@@ -15,7 +16,7 @@
 			, p.category_id
 			, p.web_show
 			, p.mobile_show
-			, pdf.id 			as "product_details_references_id"
+			, pdf.product_detials_id 			as "product_detials_id"
 			, c."name"			as "catgory_name"
 			, (SELECT u.user_name FROM user_ u WHERE u.id = p.create_by) as "create_by"
 		  , (SELECT u.user_name FROM user_ u WHERE u.id = p.modify_by) as "modify_by"

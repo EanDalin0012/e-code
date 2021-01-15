@@ -26,133 +26,132 @@ import org.slf4j.LoggerFactory;
 @RestController
 @RequestMapping(value = "/api/user/account/v1")
 public class UserAccountAPI {
-	  private static final Logger log = LoggerFactory.getLogger(UserAccountAPI.class);
-	  
-	    @Autowired
-	    private UserAccountServiceImplement userAccountService;
-	    
-	    @PostMapping(value = "/update")
-	    public ResponseData<MMap> updateUserAccount(@RequestParam("lang") String lang,@RequestParam("userId") int user_id, @RequestBody MMap param) {
-	        ResponseData<MMap> response = new ResponseData<>();
-	        try {
-	            log.info("====== Start update user account =======");
-	            
-	            ObjectMapper objectMapper = new ObjectMapper();
-	            MMap body = param.getMMap("body");
-	            MMap resp = new MMap();
-	            MMap input = new MMap();
+    private static final Logger log = LoggerFactory.getLogger(UserAccountAPI.class);
 
-	            input.setInt("userID", 					user_id);
-	            input.setBoolean("enabled", 			body.getBoolean("enabled"));
-	            input.setBoolean("accountLocked", 		body.getBoolean("accountLocked"));
-	            input.setBoolean("accountExpired", 		body.getBoolean("accountExpired"));
-	            input.setBoolean("credentialsExpired", 	body.getBoolean("credentialsExpired"));
-	            input.setString("status", 				Status.Modify.getValueStr());
-	            input.setString("userName", 			body.getString("userName"));
-	            input.setInt("id", 						body.getInt("id"));
+    @Autowired
+    private UserAccountServiceImplement userAccountService;
 
-	            log.info("====== Values:"+objectMapper.writeValueAsString(input));
-	            
-	            String isSuccess = StatusYN.N;
+    @PostMapping(value = "/update")
+    public ResponseData<MMap> updateUserAccount(@RequestParam("lang") String lang, @RequestParam("userId") int user_id, @RequestBody MMap param) {
+        ResponseData<MMap> response = new ResponseData<>();
+        try {
+            log.info("====== Start update user account =======");
 
-	            int update = userAccountService.updateUserAccount(input);
-	            if (update > 0) {
-	                isSuccess = StatusYN.Y;
-	                resp.setString(StatusYN.STATUS , isSuccess);
-	            }
-	            response.setBody(resp);
-	            
-	            log.info("====== Response Values :"+objectMapper.writeValueAsString(response));
-	            log.info("====== End update user account =======");
-	            
-	            return response;
-	        } catch (ValidatorException ex) {
-	        	log.error("========= error :", ex);
-	        	ErrorMessage message = MessageUtil.message("account_"+ex.getKey(), lang);
-	        	response.setError(message);
-	            return response;
-			}catch (Exception e) {
-				log.error("========= error execption:", e);
-				ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
-				response.setError(message);
-	            return response;
-	        }
-	        
-	    }
+            ObjectMapper objectMapper = new ObjectMapper();
+            MMap body = param.getMMap("body");
+            MMap resp = new MMap();
+            MMap input = new MMap();
 
-	    /**
-	     * <pre>
-	     *     get list of user
-	     * </pre>
-	     *
-	     * @param
-	     * @return
-	     */
-	    @GetMapping(value = "/list")
-	    public ResponseData<MMap> getUserList(@RequestParam("lang") String lang) {
-	        ResponseData<MMap> responseData = new ResponseData<>();
-	        try {
-	            log.info("====Start get list user account api ====");
-	            
-	            MMap input = new MMap();
-	            MMap body = new MMap();
-	            ObjectMapper objectMapper = new ObjectMapper();
-	            input.setString("status", Status.Delete.getValueStr());
-	            MultiMap userList = userAccountService.getList(input);
-	            int count = userAccountService.count();
-	            body.setMultiMap("items", userList);
-	            body.setInt("totalRecords", count);
+            input.setInt("userID", user_id);
+            input.setBoolean("enabled", body.getBoolean("enabled"));
+            input.setBoolean("accountLocked", body.getBoolean("accountLocked"));
+            input.setBoolean("accountExpired", body.getBoolean("accountExpired"));
+            input.setBoolean("credentialsExpired", body.getBoolean("credentialsExpired"));
+            input.setString("status", Status.Modify.getValueStr());
+            input.setString("userName", body.getString("userName"));
+            input.setInt("id", body.getInt("id"));
 
-	            responseData.setBody(body);
+            log.info("====== Values:" + objectMapper.writeValueAsString(input));
 
-	            log.info("==== Response Values:"+objectMapper.writeValueAsString(responseData));
-	            log.info("====End get list user account api====");
+            String isSuccess = StatusYN.N;
 
-	            return responseData;
-	        } catch (Exception e) {
-	        	log.error("========= error execption:", e);
-	        	ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
-	        	responseData.setError(message);
-	            return responseData;
-	        }
-	    }
+            int update = userAccountService.updateUserAccount(input);
+            if (update > 0) {
+                isSuccess = StatusYN.Y;
+                resp.setString(StatusYN.STATUS, isSuccess);
+            }
+            response.setBody(resp);
 
-	    @PostMapping(value = "/account_id")
-	    public ResponseData<MMap> retrieveUserById(@RequestBody MMap param, @RequestParam("userId") int user_id, @RequestParam("lang") String lang) {
-	        ResponseData<MMap> responseData = new ResponseData<>();
-	        MMap out = new MMap();
+            log.info("====== Response Values :" + objectMapper.writeValueAsString(response));
+            log.info("====== End update user account =======");
 
-	        try {
-	        	log.info("========= Start retrive account by id ==========");
-	        	
-	        	ObjectMapper objectMapper = new ObjectMapper();
-	            MMap body = param.getMMap("body");
-	            MMap input = new MMap();
-	            ObjectMapper mapper = new ObjectMapper();
-	            input.setInt("id", body.getInt("account_id"));
-	            
-	            log.info("======= Values:"+ mapper.writeValueAsString(input));
-	            
-	            MMap data = userAccountService.retrieveUserAccountByID(input);
-	            responseData.setBody(data);
-	            out.setString(StatusYN.STATUS, StatusYN.Y);
-	            
-	            log.info("========== Response Values:"+objectMapper.writeValueAsString(responseData));
-	            log.info("========== End retrive account by id ==========");
-	            
-	            return responseData;
-	        } catch (ValidatorException ex) {
-	            log.error("get error api retrieveUserById", ex);
-	            ErrorMessage message = MessageUtil.message("account_"+ex.getKey(), lang);
-	            responseData.setError(message);
-	            return responseData;
-	        }
-	        catch (Exception e) {
-	            log.error("get error api retrieveUserById", e);
-	            ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
-	        	responseData.setError(message);
-	            return responseData;
-	        }
+            return response;
+        } catch (ValidatorException ex) {
+            log.error("========= error :", ex);
+            ErrorMessage message = MessageUtil.message("account_" + ex.getKey(), lang);
+            response.setError(message);
+            return response;
+        } catch (Exception e) {
+            log.error("========= error execption:", e);
+            ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
+            response.setError(message);
+            return response;
+        }
 
-	    }
+    }
+
+    /**
+     * <pre>
+     *     get list of user
+     * </pre>
+     *
+     * @param
+     * @return
+     */
+    @GetMapping(value = "/list")
+    public ResponseData<MMap> getUserList(@RequestParam("lang") String lang) {
+        ResponseData<MMap> responseData = new ResponseData<>();
+        try {
+            log.info("====Start get list user account api ====");
+
+            MMap input = new MMap();
+            MMap body = new MMap();
+            ObjectMapper objectMapper = new ObjectMapper();
+            input.setString("status", Status.Delete.getValueStr());
+            MultiMap userList = userAccountService.getList(input);
+            int count = userAccountService.count();
+            body.setMultiMap("items", userList);
+            body.setInt("totalRecords", count);
+
+            responseData.setBody(body);
+
+            log.info("==== Response Values:" + objectMapper.writeValueAsString(responseData));
+            log.info("====End get list user account api====");
+
+            return responseData;
+        } catch (Exception e) {
+            log.error("========= error execption:", e);
+            ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
+            responseData.setError(message);
+            return responseData;
+        }
+    }
+
+    @PostMapping(value = "/account_id")
+    public ResponseData<MMap> retrieveUserById(@RequestBody MMap param, @RequestParam("userId") int user_id, @RequestParam("lang") String lang) {
+        ResponseData<MMap> responseData = new ResponseData<>();
+        MMap out = new MMap();
+
+        try {
+            log.info("========= Start retrive account by id ==========");
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            MMap body = param.getMMap("body");
+            MMap input = new MMap();
+            ObjectMapper mapper = new ObjectMapper();
+            input.setInt("id", body.getInt("account_id"));
+
+            log.info("======= Values:" + mapper.writeValueAsString(input));
+
+            MMap data = userAccountService.retrieveUserAccountByID(input);
+            responseData.setBody(data);
+            out.setString(StatusYN.STATUS, StatusYN.Y);
+
+            log.info("========== Response Values:" + objectMapper.writeValueAsString(responseData));
+            log.info("========== End retrive account by id ==========");
+
+            return responseData;
+        } catch (ValidatorException ex) {
+            log.error("get error api retrieveUserById", ex);
+            ErrorMessage message = MessageUtil.message("account_" + ex.getKey(), lang);
+            responseData.setError(message);
+            return responseData;
+        } catch (Exception e) {
+            log.error("get error api retrieveUserById", e);
+            ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);
+            responseData.setError(message);
+            return responseData;
+        }
+
+    }
 }

@@ -7,6 +7,7 @@ import com.ecode.core.map.MultiMap;
 
 @Mapper
 public interface UserDetailsDao {
-	int save(MMap param);
+    int save(MMap param);
+
     MultiMap dataDetails(MMap param);
 }

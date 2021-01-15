@@ -10,7 +10,7 @@ public class MMap extends LinkedHashMap<String, Object> {
 
     private boolean nullToInitialize = false;
 
-    
+
     public boolean isNullToInitialize() {
         return this.nullToInitialize;
     }

@@ -6,8 +6,11 @@ import com.ecode.core.map.MMap;
 
 @Mapper
 public interface ResourceFileInfoDao {
-	long getLastId();
+    long getLastId();
+
     int fileUpload(MMap param);
+
     MMap getResourceById(MMap param);
+
     int deleteById(MMap param);
 }

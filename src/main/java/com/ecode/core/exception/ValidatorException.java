@@ -1,7 +1,7 @@
 package com.ecode.core.exception;
 
-public class ValidatorException extends Throwable{
-	private String key;
+public class ValidatorException extends Throwable {
+    private String key;
     private String value;
 
     public ValidatorException(String key, String value) {
