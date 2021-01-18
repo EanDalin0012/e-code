@@ -50,28 +50,28 @@ public class CryptoUtils {
         return new String(encoded);
     }
 
-//    public static void main(String a[]) throws Exception {
-//        String secretKey = "mustbe16byteskey";
-//        String encodedBase64Key = encodeKey(secretKey);
-//        System.out.println("EncodedBase64Key = " + encodedBase64Key); // This need to be share between client and server
-//        // To check actual key from encoded base 64 secretKey
-//        // String toDecodeBase64Key = decodeKey(encodedBase64Key);
-//        // System.out.println("toDecodeBase64Key = "+toDecodeBase64Key);
-//        Map<String, Object> data = new LinkedHashMap<>();
-//        ObjectMapper objectMapper = new ObjectMapper();
-//
-//        data.put("id", 1);
-//        data.put("name", "name");
-//        data.put("gender", "male");
-//        String rawdata = objectMapper.writeValueAsString(data);
-//
-//
-//        // AES Encryption based on above secretKey
-//        String encrStr = CryptoUtils.encrypt(rawdata, encodedBase64Key);
-//        System.out.println("Cipher Text: Encryption of str = " + encrStr);
-//        // AES Decryption based on above secretKey
-//        String decrStr = CryptoUtils.decrypt(encrStr, encodedBase64Key);
-//        System.out.println("Decryption of str = " + decrStr);
-//    }
+    public static void main(String a[]) throws Exception {
+        String secretKey = "mustbe16byteskey";
+        String encodedBase64Key = encodeKey(secretKey);
+        System.out.println("EncodedBase64Key = " + encodedBase64Key); // This need to be share between client and server
+        // To check actual key from encoded base 64 secretKey
+        // String toDecodeBase64Key = decodeKey(encodedBase64Key);
+        // System.out.println("toDecodeBase64Key = "+toDecodeBase64Key);
+        Map<String, Object> data = new LinkedHashMap<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        data.put("id", 1);
+        data.put("name", "name");
+        data.put("gender", "male");
+        String rawdata = objectMapper.writeValueAsString(data);
+
+
+        // AES Encryption based on above secretKey
+        String encrStr = CryptoUtils.encrypt(rawdata, encodedBase64Key);
+        System.out.println("Cipher Text: Encryption of str = " + encrStr);
+        // AES Decryption based on above secretKey
+        String decrStr = CryptoUtils.decrypt(encrStr, encodedBase64Key);
+        System.out.println("Decryption of str = " + decrStr);
+    }
 
 }

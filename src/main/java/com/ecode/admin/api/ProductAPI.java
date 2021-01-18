@@ -1,6 +1,7 @@
 package com.ecode.admin.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
@@ -24,6 +25,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.CompletableFuture;
+
 @RestController
 @RequestMapping(value = "/api/product/v1")
 public class ProductAPI {
@@ -35,8 +38,9 @@ public class ProductAPI {
     private PlatformTransactionManager transactionManager;
 
     @GetMapping(value = "/list")
-    public ResponseData<MultiMap> list(@RequestParam("userId") int user_id, @RequestParam("lang") String lang) {
-        return getProductList(lang);
+    @Async("asyncExecutor")
+    public CompletableFuture<ResponseData<MultiMap>> list(@RequestParam("userId") int user_id, @RequestParam("lang") String lang) {
+        return CompletableFuture.completedFuture(getProductList(lang));
     }
 
     @PostMapping(value = "/save")
