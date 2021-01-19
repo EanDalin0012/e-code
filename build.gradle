@@ -5,7 +5,7 @@ plugins {
     id 'war'
 }
 
-group = 'com'
+group = 'com.ecode'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
@@ -33,7 +33,8 @@ dependencies {
     compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '3.0.0-M4'
     compile group: 'javax.xml', name: 'jaxb-impl', version: '2.1'
     compile group: 'com.google.guava', name: 'guava', version: '29.0-jre'
-    compile group: 'commons-io', name: 'commons-io'
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    compile group: 'commons-io', name: 'commons-io', version: '2.8.0'
 
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
