@@ -23,6 +23,6 @@ spring:
     serialization:
       wrap-root-value: true
 mybatis:
-  type-aliases-package: com.ecode.core.map
+  type-aliases-package: com.ecode.core.map,com.ecode.core.map.MMap
   config-location: classpath:mybatis/mybatis_config.xml
   mapper-locations: classpath:mybatis/mapper/**/*.xml

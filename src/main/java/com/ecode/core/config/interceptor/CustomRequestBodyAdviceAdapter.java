@@ -3,7 +3,6 @@ import com.ecode.core.constant.KeyCode;
 import com.ecode.core.encryption.EASEncrpter;
 import com.ecode.core.map.MMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.codehaus.jackson.map.util.JSONPObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
@@ -11,7 +10,10 @@ import org.springframework.http.HttpInputMessage;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdviceAdapter;
+import com.google.gson.Gson;
+import java.io.DataInput;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -37,32 +39,33 @@ public class CustomRequestBodyAdviceAdapter extends RequestBodyAdviceAdapter {
     }
 
     public Object customizeAfterBodyRead(Object body) {
-        Map<String, Object> dataBody = new LinkedHashMap<>();
-        String decrStr = null;
-        MMap data1 = new MMap();
+        MMap dataBody = new MMap();
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String encodedBase64Key = EASEncrpter.encodeKey(KeyCode.keyCode);;
-            Map<String, Object> getDataBody = (Map<String, Object>) body;
-
-            log.info("=== getDataBody:"+objectMapper.writeValueAsString(getDataBody));
+            MMap getDataBody = (MMap) body;
+            log.info("=== Data From Client Side :"+objectMapper.writeValueAsString(getDataBody));
             String encrypt = getDataBody.get("body").toString();
-            log.info("=== data encrypt:"+encrypt);
-
-            decrStr = EASEncrpter.decrypt(encrypt, encodedBase64Key);
-            log.info("=== data decrypt:"+decrStr);
-            MMap d = new MMap();
-            d.set("name", "fafdfsdfsd");
-            d.set("description","description");
-            data1.setMMap("body", d);
-            dataBody = objectMapper.readValue(decrStr,Map.class);
-
+            log.info("===Encryption Data:"+encrypt);
+            String decrStr = EASEncrpter.decrypt(encrypt, encodedBase64Key);
+            log.info("=== Decryption Data :"+decrStr);
+            Gson gson = new Gson();
+            Map<String, Object> map = gson.fromJson(decrStr, Map.class);
+            MMap input = new MMap();
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                String k = entry.getKey();
+                String v = (String) entry.getValue();
+                input.put(k,entry.getValue());
+            }
+            dataBody.setMMap("body", input);
+            log.info("=== Return Data To Controller :"+objectMapper.writeValueAsString(dataBody));
             log.info("=== End RequestBodyAdviceAdapter ===\n");
-        return data1;
+            return dataBody;
         }catch (Exception e) {
             e.printStackTrace();
         }
         return dataBody;
     }
+
 }
 

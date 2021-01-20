@@ -30,12 +30,12 @@ public class CustomResponseBodyAdviceAdapter implements ResponseBodyAdvice<Objec
 
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-        log.info("=== Start CustomResponseBodyAdviceAdapter ===");
-        log.info("=== Start CustomResponseBodyAdviceAdapter ===");
-        // Object object = customizeBeforeBodyWrite(body, request, response);
-        log.info("=== Start CustomResponseBodyAdviceAdapter ===");
-        log.info("=== Start CustomResponseBodyAdviceAdapter ===");
-        return  body;
+        log.info("\n");
+        log.info("=== Start Custom Response Body Advice Adapter ===");
+        Object object = customizeBeforeBodyWrite(body, request, response);
+        log.info("=== End Custom Response Body Advice Adapter ===");
+        log.info("\n");
+        return  object;
     }
 
     private Object customizeBeforeBodyWrite(Object body,ServerHttpRequest request, ServerHttpResponse response) {
@@ -44,9 +44,6 @@ public class CustomResponseBodyAdviceAdapter implements ResponseBodyAdvice<Objec
         if (request instanceof ServletServerHttpRequest &&
                 response instanceof ServletServerHttpResponse) {
             try {
-                log.info("\n");
-                log.info("=== Start ResponseBodyAdvice ===");
-                log.info("body:"+objectMapper.writeValueAsString(body));
                 String secretKey = KeyCode.keyCode;
                 String encodedBase64Key = EASEncrpter.encodeKey(secretKey);
                 String rawData = objectMapper.writeValueAsString(body);

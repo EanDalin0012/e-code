@@ -1,5 +1,9 @@
 package com.ecode.admin.service.implement;
 
+import com.ecode.admin.api.CardIdentifyAPI;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,9 +14,11 @@ import com.ecode.core.exception.ValidatorException;
 import com.ecode.core.map.MMap;
 import com.ecode.core.map.MultiMap;
 
+import java.io.IOException;
+
 @Service
 public class CategoryServiceImplement implements CategoryService {
-
+    private static final Logger log = LoggerFactory.getLogger(CategoryServiceImplement.class);
     @Autowired
     private CategoryDao categoryDao;
 
@@ -23,7 +29,9 @@ public class CategoryServiceImplement implements CategoryService {
     }
 
     @Override
-    public int save(MMap param) throws ValidatorException {
+    public int save(MMap param) throws ValidatorException, IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        log.info("param paramparamparamparamparam "+objectMapper.writeValueAsString(param));
         ValidatorUtil.validate(param, "name", "status", "user_id");
         return categoryDao.save(param);
     }
