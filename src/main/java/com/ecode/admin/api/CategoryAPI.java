@@ -1,5 +1,6 @@
 package com.ecode.admin.api;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -69,14 +70,14 @@ public class CategoryAPI {
     }
 
     @PostMapping(value = "/save")
-    public ResponseData<MMap> save(@RequestParam("userId") int user_id, @RequestParam("lang") String lang, @RequestBody MMap param) {
+    public ResponseData<MMap> save(@RequestParam("userId") int user_id, @RequestParam("lang") String lang, @RequestBody JSONObject param) {
         ResponseData<MMap> responseData = new ResponseData<>();
 
         try {
             log.info("===== Start save category =====");
 
             ObjectMapper mapper = new ObjectMapper();
-            MMap body = param.getMMap("body");
+            MMap body = (MMap) param.get("body");
             MMap responseBody = new MMap();
             int sequence = categoryService.sequence();
             MMap input = new MMap();
@@ -97,12 +98,13 @@ public class CategoryAPI {
             log.info("======== Response Data:" + mapper.writeValueAsString(responseData));
             log.info("======== End save category ====");
 
-        } catch (ValidatorException ev) {
-            log.error("========== error ValidatorException api category get list", ev);
-            ErrorMessage message = MessageUtil.message("category_" + ev.getKey(), lang);
-            responseData.setError(message);
-            return responseData;
-        } catch (Exception e) {
+//        } catch (ValidatorException ev) {
+//            log.error("========== error ValidatorException api category get list", ev);
+//            ErrorMessage message = MessageUtil.message("category_" + ev.getKey(), lang);
+//            responseData.setError(message);
+//            return responseData;
+        }
+        catch (Exception | ValidatorException e) {
             e.printStackTrace();
             log.error("========= error Exception api save category", e);
             ErrorMessage message = MessageUtil.message(ErrorCode.EXCEPTION_ERR, lang);

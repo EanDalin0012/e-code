@@ -58,7 +58,7 @@
     	]]>
     </insert>
 
-    <select id="getValueById" resultType="MMap">
+    <select id="getValueById">
         <![CDATA[
 		  	SELECT
 		  		  id			as "id"

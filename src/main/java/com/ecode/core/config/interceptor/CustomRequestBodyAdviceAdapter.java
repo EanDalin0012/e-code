@@ -1,8 +1,10 @@
 package com.ecode.core.config.interceptor;
+
 import com.ecode.core.constant.KeyCode;
 import com.ecode.core.encryption.EASEncrpter;
 import com.ecode.core.map.MMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
@@ -11,11 +13,11 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdviceAdapter;
 import com.google.gson.Gson;
-import java.io.DataInput;
+
+import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
+import org.json.simple.parser.JSONParser;
 
 @ControllerAdvice
 public class CustomRequestBodyAdviceAdapter extends RequestBodyAdviceAdapter {
@@ -26,45 +28,57 @@ public class CustomRequestBodyAdviceAdapter extends RequestBodyAdviceAdapter {
         return true;
     }
 
-    @Override
-    public Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
-
-        log.info("\n");
-        log.info("=== Start CustomRequestBodyAdviceAdapter ===");
-        body = customizeAfterBodyRead(body);
-        log.info("=== Start CustomRequestBodyAdviceAdapter ===");
-        log.info("\n");
-
-        return super.afterBodyRead(body, inputMessage, parameter, targetType, converterType);
+    public CustomRequestBodyAdviceAdapter() {
+        super();
     }
 
-    public Object customizeAfterBodyRead(Object body) {
-        MMap dataBody = new MMap();
+    @Override
+    public HttpInputMessage beforeBodyRead(HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) throws IOException {
+        return super.beforeBodyRead(inputMessage, parameter, targetType, converterType);
+    }
+
+    @Override
+    public Object handleEmptyBody(Object body, HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
+        return super.handleEmptyBody(body, inputMessage, parameter, targetType, converterType);
+    }
+
+    @Override
+    public Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
+        return customizeAfterBodyRead(body);
+    }
+
+    private MMap customizeAfterBodyRead(Object body) {
+        log.info("=== Start Request Body Advice Adapter ===");
+
+        MMap mMap = new MMap();
+        ObjectMapper objectMapper = new ObjectMapper();
+
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String encodedBase64Key = EASEncrpter.encodeKey(KeyCode.keyCode);;
-            MMap getDataBody = (MMap) body;
-            log.info("=== Data From Client Side :"+objectMapper.writeValueAsString(getDataBody));
-            String encrypt = getDataBody.get("body").toString();
-            log.info("===Encryption Data:"+encrypt);
-            String decrStr = EASEncrpter.decrypt(encrypt, encodedBase64Key);
-            log.info("=== Decryption Data :"+decrStr);
-            Gson gson = new Gson();
-            Map<String, Object> map = gson.fromJson(decrStr, Map.class);
-            MMap input = new MMap();
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                String k = entry.getKey();
-                String v = (String) entry.getValue();
-                input.put(k,entry.getValue());
-            }
-            dataBody.setMMap("body", input);
-            log.info("=== Return Data To Controller :"+objectMapper.writeValueAsString(dataBody));
-            log.info("=== End RequestBodyAdviceAdapter ===\n");
-            return dataBody;
-        }catch (Exception e) {
+
+            String clientData = objectMapper.writeValueAsString(body);
+            log.info("Request Body Advice Adapter Data Client = " + clientData);
+
+            JSONObject jsonObject = objectMapper.readValue(clientData, JSONObject.class);
+            log.info("Request Body Advice Adapter Data JSONObject Data Convert = " + objectMapper.writeValueAsString(jsonObject));
+
+            String encodeKey = EASEncrpter.encodeKey(KeyCode.keyCode);
+            String rawData = (String) jsonObject.get("body");
+            log.info("Request Body Advice Adapter Client Encrypt Data = " + rawData);
+
+            String decrypt = EASEncrpter.decrypt(rawData, encodeKey);
+            log.info("Request Body Advice Adapter Client Decrypt Data = " + decrypt);
+
+            MMap dataBody = objectMapper.readValue(decrypt, MMap.class);
+            mMap.setMMap("body", dataBody);
+            log.info("mMap data return to controller= " + objectMapper.writeValueAsString(mMap));
+
+            log.info("=== End Request Body Advice Adapter ===");
+            return  dataBody;
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return dataBody;
+
+        return mMap;
     }
 
 }

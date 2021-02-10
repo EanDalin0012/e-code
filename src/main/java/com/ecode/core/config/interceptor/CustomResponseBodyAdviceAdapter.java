@@ -32,10 +32,10 @@ public class CustomResponseBodyAdviceAdapter implements ResponseBodyAdvice<Objec
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         log.info("\n");
         log.info("=== Start Custom Response Body Advice Adapter ===");
-        Object object = customizeBeforeBodyWrite(body, request, response);
+        //body = customizeBeforeBodyWrite(body, request, response);
         log.info("=== End Custom Response Body Advice Adapter ===");
         log.info("\n");
-        return  object;
+        return  body;
     }
 
     private Object customizeBeforeBodyWrite(Object body,ServerHttpRequest request, ServerHttpResponse response) {
