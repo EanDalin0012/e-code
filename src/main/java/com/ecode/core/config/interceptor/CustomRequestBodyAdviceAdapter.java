@@ -12,12 +12,9 @@ import org.springframework.http.HttpInputMessage;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdviceAdapter;
-import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.*;
-import org.json.simple.parser.JSONParser;
 
 @ControllerAdvice
 public class CustomRequestBodyAdviceAdapter extends RequestBodyAdviceAdapter {
@@ -68,12 +65,12 @@ public class CustomRequestBodyAdviceAdapter extends RequestBodyAdviceAdapter {
             String decrypt = EASEncrpter.decrypt(rawData, encodeKey);
             log.info("Request Body Advice Adapter Client Decrypt Data = " + decrypt);
 
-            MMap dataBody = objectMapper.readValue(decrypt, MMap.class);
-            mMap.setMMap("body", dataBody);
+             mMap = objectMapper.readValue(decrypt, MMap.class);
+//            mMap.setMMap("body", dataBody);
             log.info("mMap data return to controller= " + objectMapper.writeValueAsString(mMap));
 
             log.info("=== End Request Body Advice Adapter ===");
-            return  dataBody;
+            return  mMap;
         } catch (Exception e) {
             e.printStackTrace();
         }

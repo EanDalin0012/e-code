@@ -43,12 +43,6 @@ public class CategoryServiceImplement implements CategoryService {
     }
 
     @Override
-    public MMap retrieveCategoryById(MMap param) throws ValidatorException {
-        ValidatorUtil.validate(param, "id", "status");
-        return categoryDao.retrieveCategoryById(param);
-    }
-
-    @Override
     public int update(MMap param) throws ValidatorException {
         ValidatorUtil.validate(param, "id", "status", "name", "user_id");
         return categoryDao.update(param);

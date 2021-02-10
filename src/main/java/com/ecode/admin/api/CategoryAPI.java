@@ -70,14 +70,14 @@ public class CategoryAPI {
     }
 
     @PostMapping(value = "/save")
-    public ResponseData<MMap> save(@RequestParam("userId") int user_id, @RequestParam("lang") String lang, @RequestBody JSONObject param) {
+    public ResponseData<MMap> save(@RequestParam("userId") int user_id, @RequestParam("lang") String lang, @RequestBody MMap param) {
         ResponseData<MMap> responseData = new ResponseData<>();
 
         try {
             log.info("===== Start save category =====");
 
             ObjectMapper mapper = new ObjectMapper();
-            MMap body = (MMap) param.get("body");
+            MMap body = param.getMMap("body");
             MMap responseBody = new MMap();
             int sequence = categoryService.sequence();
             MMap input = new MMap();
