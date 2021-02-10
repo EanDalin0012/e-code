@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ecode.admin.dao.TestingDecryptionDao">
+
+    <insert id="save">
+        <![CDATA[
+	    	INSERT INTO test_decrypt
+			(
+			    id
+			    , name
+			)
+			VALUES (
+			#{id}
+			, #{name}
+			)
+    	]]>
+    </insert>
+
+    <select id="retrieve" resultType="MMap">
+        <![CDATA[
+        SELECT * FROM test_decrypt;
+        ]]>
+    </select>
+
+</mapper>

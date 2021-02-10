@@ -68,12 +68,12 @@ public class CustomRequestBodyAdviceAdapter extends RequestBodyAdviceAdapter {
             String decrypt = EASEncrpter.decrypt(rawData, encodeKey);
             log.info("Request Body Advice Adapter Client Decrypt Data = " + decrypt);
 
-            MMap dataBody = objectMapper.readValue(decrypt, MMap.class);
-            mMap.setMMap("body", dataBody);
+             mMap = objectMapper.readValue(decrypt, MMap.class);
+//            mMap.setMMap("body", dataBody);
             log.info("mMap data return to controller= " + objectMapper.writeValueAsString(mMap));
 
             log.info("=== End Request Body Advice Adapter ===");
-            return  dataBody;
+            return  mMap;
         } catch (Exception e) {
             e.printStackTrace();
         }
